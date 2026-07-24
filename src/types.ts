@@ -7,7 +7,8 @@ export type RoutePath =
   | 'frames' 
   | 'about' 
   | 'contact' 
-  | 'privacy';
+  | 'privacy'
+  | 'cms';
 
 export type ProjectCategory = 
   | 'All'
@@ -114,4 +115,39 @@ export interface ContactFormData {
   projectType: string;
   message: string;
   privacyAccepted: boolean;
+}
+
+export interface SiteContent {
+  hero: {
+    headline: string;
+    subtitle: string;
+    bgImage: string;
+    availableBadge: string;
+    reelLabel: string;
+  };
+  manifesto: {
+    mainStatement: string;
+    subParagraph: string;
+  };
+  about: {
+    bioTitle: string;
+    bioParagraph1: string;
+    bioParagraph2: string;
+    bioParagraph3: string;
+    email: string;
+    phone: string;
+    location: string;
+    instagramUrl: string;
+    vimeoUrl: string;
+    linkedinUrl: string;
+  };
+}
+
+export interface MediaAsset {
+  id: string;
+  url: string;
+  name: string;
+  category: 'projects' | 'frames' | 'hero' | 'general';
+  uploadedAt: string;
+  size?: string;
 }

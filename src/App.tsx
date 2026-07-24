@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { RoutePath } from './types';
-import { PROJECTS_DATA } from './data/projects';
-import { LAB_ARTICLES_DATA } from './data/lab';
-import { FRAMES_DATA } from './data/frames';
+import { CMSProvider, useCMS } from './context/CMSContext';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -23,10 +21,13 @@ import { AboutView } from './components/AboutView';
 import { ContactView } from './components/ContactView';
 import { PrivacyView } from './components/PrivacyView';
 import { NotFoundView } from './components/NotFoundView';
+import { CMSMainView } from './components/cms/CMSMainView';
 
-export function App() {
+function MainAppContent() {
   const [currentRoute, setCurrentRoute] = useState<RoutePath>('home');
   const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(null);
+
+  const { projects, frames, articles } = useCMS();
 
   // Handle browser back/forward and hash or direct state transitions
   const handleNavigate = (route: RoutePath) => {
@@ -43,7 +44,12 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const activeProject = PROJECTS_DATA.find((p) => p.slug === activeProjectSlug) || PROJECTS_DATA[0];
+  const activeProject = projects.find((p) => p.slug === activeProjectSlug) || projects[0];
+
+  // Dedicated full-screen route for the CMS Admin Panel
+  if (currentRoute === 'cms') {
+    return <CMSMainView onNavigate={handleNavigate} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#09090A] text-[#F1F0EB] font-sans selection:bg-[#FF5A36] selection:text-white flex flex-col relative grain-overlay">
@@ -64,19 +70,19 @@ export function App() {
             <Hero onNavigate={handleNavigate} />
             <HomeManifesto onNavigate={handleNavigate} />
             <FeaturedProjectsCarousel
-              projects={PROJECTS_DATA}
+              projects={projects}
               onSelectProject={handleSelectProject}
               onNavigate={handleNavigate}
             />
             <BeyondProcessSection />
             <WhatMattersSection />
             <FramesSection
-              frames={FRAMES_DATA}
+              frames={frames}
               onNavigate={handleNavigate}
               isTeaser
             />
             <LabSection
-              articles={LAB_ARTICLES_DATA}
+              articles={articles}
               onNavigate={handleNavigate}
               isTeaser
             />
@@ -86,7 +92,7 @@ export function App() {
 
         {currentRoute === 'projects' && (
           <ProjectsView
-            projects={PROJECTS_DATA}
+            projects={projects}
             onSelectProject={handleSelectProject}
             onNavigate={handleNavigate}
           />
@@ -95,7 +101,7 @@ export function App() {
         {currentRoute === 'project-detail' && activeProject && (
           <ProjectDetailView
             project={activeProject}
-            allProjects={PROJECTS_DATA}
+            allProjects={projects}
             onSelectProject={handleSelectProject}
             onNavigate={handleNavigate}
           />
@@ -104,7 +110,7 @@ export function App() {
         {currentRoute === 'lab' && (
           <div className="pt-28">
             <LabSection
-              articles={LAB_ARTICLES_DATA}
+              articles={articles}
               onNavigate={handleNavigate}
             />
           </div>
@@ -113,7 +119,7 @@ export function App() {
         {currentRoute === 'frames' && (
           <div className="pt-28">
             <FramesSection
-              frames={FRAMES_DATA}
+              frames={frames}
               onNavigate={handleNavigate}
             />
           </div>
@@ -134,7 +140,7 @@ export function App() {
           <PrivacyView onNavigate={handleNavigate} />
         )}
 
-        {!['home', 'projects', 'project-detail', 'lab', 'frames', 'about', 'contact', 'privacy'].includes(currentRoute) && (
+        {!['home', 'projects', 'project-detail', 'lab', 'frames', 'about', 'contact', 'privacy', 'cms'].includes(currentRoute) && (
           <NotFoundView onNavigate={handleNavigate} />
         )}
       </main>
@@ -143,6 +149,14 @@ export function App() {
       <Footer onNavigate={handleNavigate} />
 
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <CMSProvider>
+      <MainAppContent />
+    </CMSProvider>
   );
 }
 

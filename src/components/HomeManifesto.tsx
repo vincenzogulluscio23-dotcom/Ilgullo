@@ -2,6 +2,7 @@ import React from 'react';
 import { RoutePath } from '../types';
 import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
+import { useCMS } from '../context/CMSContext';
 import { motion } from 'motion/react';
 
 interface HomeManifestoProps {
@@ -9,6 +10,9 @@ interface HomeManifestoProps {
 }
 
 export const HomeManifesto: React.FC<HomeManifestoProps> = ({ onNavigate }) => {
+  const { siteContent } = useCMS();
+  const manifesto = siteContent.manifesto;
+
   return (
     <section className="py-24 md:py-36 px-4 sm:px-6 lg:px-12 bg-[#09090A] relative overflow-hidden">
       
@@ -34,10 +38,7 @@ export const HomeManifesto: React.FC<HomeManifestoProps> = ({ onNavigate }) => {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#F1F0EB] font-normal leading-[1.08] tracking-tight text-balance mb-12"
         >
-          Non cerco soltanto immagini belle. <br />
-          Cerco <span className="font-serif italic text-white font-normal hover:text-[#FF5A36] transition-colors duration-300">persone</span>,{' '}
-          <span className="font-serif italic text-[#FF5A36] font-normal">relazioni</span> e{' '}
-          <span className="font-serif italic text-white font-normal hover:text-[#FF5A36] transition-colors duration-300">momenti</span> che abbiano qualcosa da lasciare.
+          {manifesto.mainStatement}
         </motion.h2>
 
         <motion.div
@@ -48,7 +49,7 @@ export const HomeManifesto: React.FC<HomeManifestoProps> = ({ onNavigate }) => {
           className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end pt-8 border-t border-[#28282D]/30"
         >
           <p className="md:col-span-8 text-base sm:text-lg text-[#C9C7C1] leading-relaxed text-pretty font-sans font-normal">
-            Il mio lavoro parte dall’<span className="font-serif italic text-white font-medium">osservazione</span>. Prima di pensare a una camera o a un’inquadratura, cerco di capire cosa renda davvero autentica una storia. A volte è una persona, altre volte un gesto o un <span className="font-serif italic text-white font-medium">dettaglio</span> che rischierebbe di passare inosservato. La tecnica arriva dopo, per dare forma a ciò che vale la pena ricordare.
+            {manifesto.subParagraph}
           </p>
 
           <div className="md:col-span-4 flex md:justify-end">

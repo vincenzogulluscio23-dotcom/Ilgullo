@@ -132,12 +132,21 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Vincenzo Gulluscio <br />
               P. IVA 04700280987
             </p>
-            <button
-              onClick={() => { onNavigate('privacy'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="text-[#8D8D89] hover:text-[#FF5A36] underline transition-colors"
-            >
-              Privacy Policy
-            </button>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => { onNavigate('privacy'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="text-left text-[#8D8D89] hover:text-[#FF5A36] underline transition-colors"
+              >
+                Privacy Policy
+              </button>
+              <button
+                onClick={() => { onNavigate('cms'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="text-left text-[#FF5A36] hover:text-white transition-colors flex items-center gap-1 font-semibold"
+              >
+                <span>Area Riservata / CMS</span>
+                <span>→</span>
+              </button>
+            </div>
           </div>
         </div>
 

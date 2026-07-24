@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RoutePath } from '../types';
 import { Button } from './Button';
+import { useCMS } from '../context/CMSContext';
 import { Volume2, VolumeX, Play, Pause, Disc } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -11,6 +12,8 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const { siteContent } = useCMS();
+  const heroData = siteContent.hero;
 
   return (
     <section className="relative min-h-[100svh] w-full flex flex-col justify-between pt-28 pb-8 px-4 sm:px-6 lg:px-12 bg-[#09090A] overflow-hidden">
@@ -27,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
             scale: { duration: 15, repeat: Infinity, ease: 'easeInOut' },
             opacity: { duration: 0.8 },
           }}
-          src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=85"
+          src={heroData.bgImage || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=85"}
           alt="Gullo Cinematic Background"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-center"
@@ -59,7 +62,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
             >
               <Disc className="w-3.5 h-3.5 text-[#FF5A36]" />
             </motion.div>
-            <span>REEL 2026</span>
+            <span>{heroData.reelLabel || "REEL 2026"}</span>
           </div>
 
           <motion.button
@@ -110,8 +113,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="font-serif italic text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-[#F1F0EB] leading-[0.92] tracking-tight text-balance mb-6 drop-shadow-sm"
         >
-          Le storie esistono già. <br />
-          Bisogna solo <span className="font-sans not-italic font-normal text-white">fermarsi</span> a guardarle <span className="font-serif italic text-[#FF5A36]">davvero.</span>
+          {heroData.headline}
         </motion.h1>
 
         <motion.p
@@ -120,7 +122,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
           transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
           className="max-w-xl mx-auto text-sm sm:text-base md:text-lg text-[#C9C7C1] font-sans font-normal leading-relaxed text-pretty mb-8"
         >
-          Creo film, fotografie e contenuti per aziende, agenzie e persone che vogliono raccontarsi con più verità, intenzione e personalità.
+          {heroData.subtitle}
         </motion.p>
 
         <motion.div
