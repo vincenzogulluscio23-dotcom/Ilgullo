@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RoutePath } from './types';
 import { CMSProvider, useCMS } from './context/CMSContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -191,9 +192,11 @@ function MainAppContent() {
 
 export function App() {
   return (
-    <CMSProvider>
-      <MainAppContent />
-    </CMSProvider>
+    <LanguageProvider>
+      <CMSProvider>
+        <MainAppContent />
+      </CMSProvider>
+    </LanguageProvider>
   );
 }
 

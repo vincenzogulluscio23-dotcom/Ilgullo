@@ -5,6 +5,8 @@ import { Button } from './Button';
 import { PROJECTS_DATA } from '../data/projects';
 import { FRAMES_DATA } from '../data/frames';
 import { OverlappingTabletopCollage } from './OverlappingTabletopCollage';
+import { useLanguage } from '../context/LanguageContext';
+import { useCMS } from '../context/CMSContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   MapPin,
@@ -41,6 +43,17 @@ export const AboutView: React.FC<AboutViewProps> = ({
 }) => {
   const [mediaFilter] = useState<'all' | 'projects' | 'frames'>('all');
   const [activeFrameModal, setActiveFrameModal] = useState<DynamicMediaItem | null>(null);
+  const { language, t } = useLanguage();
+  const { siteContent } = useCMS();
+  const isEn = language === 'en';
+
+  const aboutData = {
+    bioTitle: (isEn && siteContent.en?.about?.bioTitle) || siteContent.about.bioTitle,
+    bioParagraph1: (isEn && siteContent.en?.about?.bioParagraph1) || siteContent.about.bioParagraph1,
+    bioParagraph2: (isEn && siteContent.en?.about?.bioParagraph2) || siteContent.about.bioParagraph2,
+    bioParagraph3: (isEn && siteContent.en?.about?.bioParagraph3) || siteContent.about.bioParagraph3,
+    location: (isEn && siteContent.en?.about?.location) || siteContent.about.location,
+  };
 
   // Harvest media items from PROJECTS_DATA and FRAMES_DATA
   const harvestedProjects: DynamicMediaItem[] = PROJECTS_DATA.map((p) => ({
@@ -98,7 +111,20 @@ export const AboutView: React.FC<AboutViewProps> = ({
     'Hawe Italia',
   ];
 
-  const services = [
+  const services = isEn ? [
+    'Corporate Films & Video',
+    'Branded Content',
+    'Video & Photography Campaigns',
+    'Corporate Storytelling',
+    'Editorial Photography',
+    'Interviews & Testimonials',
+    'Visual Case Studies',
+    'Social & Digital Content',
+    'Behind-the-Scenes & Making-of',
+    'Creative Direction & Strategy',
+    'Cinematography',
+    'Editing & Post-Production',
+  ] : [
     'Film e video corporate',
     'Branded content',
     'Campagne video e fotografiche',
@@ -113,7 +139,13 @@ export const AboutView: React.FC<AboutViewProps> = ({
     'Montaggio e post-produzione',
   ];
 
-  const approachQuestions = [
+  const approachQuestions = isEn ? [
+    'Who is the audience for this story?',
+    'What key feeling or message must resonate?',
+    'What genuine narrative is already present?',
+    'What does the viewer truly experience?',
+    'What can be simplified or stripped away?',
+  ] : [
     'Chi guarderà questo contenuto?',
     'Cosa deve rimanere impresso?',
     'Quale storia autentica esiste già?',
@@ -121,7 +153,12 @@ export const AboutView: React.FC<AboutViewProps> = ({
     'Cosa si può superare o tralasciare?',
   ];
 
-  const disciplines = [
+  const disciplines = isEn ? [
+    { num: '#01', label: 'Creative Direction & Storytelling' },
+    { num: '#02', label: 'Filmmaking & Brand Directing' },
+    { num: '#03', label: 'Photography & Editorial Frames' },
+    { num: '#04', label: 'Editing & Post-Production' },
+  ] : [
     { num: '#01', label: 'Direzione Creativa & Storytelling' },
     { num: '#02', label: 'Filmmaking & Regia Corporate' },
     { num: '#03', label: 'Fotografia & Frames d\'Autore' },
@@ -212,10 +249,12 @@ export const AboutView: React.FC<AboutViewProps> = ({
             >
               <div className="bg-[#09090A]/75 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-6 sm:p-8 shadow-2xl">
                 <h2 className="font-serif italic text-xl sm:text-2xl text-white mb-3 leading-snug">
-                  Le storie più forti nascono da ciò che c'è già.
+                  {isEn ? 'The strongest stories stem from what already exists.' : 'Le storie più forti nascono da ciò che c\'è già.'}
                 </h2>
                 <p className="font-sans text-xs sm:text-sm text-[#C9C7C1] leading-relaxed">
-                  Dalla regia alla fotografia, costruisco racconti visivi che connettono le persone, rispettano l'identità di chi parla e durano nel tempo.
+                  {isEn
+                    ? 'From directing to photography, I shape visual narratives that connect people, honor identity, and endure.'
+                    : 'Dalla regia alla fotografia, costruisco racconti visivi che connettono le persone, rispettano l\'identità di chi parla e durano nel tempo.'}
                 </p>
               </div>
             </motion.div>
@@ -279,18 +318,12 @@ export const AboutView: React.FC<AboutViewProps> = ({
             className="lg:col-span-7 space-y-6 text-base sm:text-lg text-[#C9C7C1] font-sans leading-relaxed"
           >
             <h2 className="font-serif italic text-3xl sm:text-5xl text-white leading-tight mb-8">
-              Un approccio basato sull'osservazione e sulla sintesi visiva.
+              {aboutData.bioTitle}
             </h2>
 
-            <p>
-              Sono Vincenzo Gulluscio, ma da sempre quasi tutti mi chiamano <strong className="text-white font-medium">Gullo</strong>. Lavoro come filmmaker, fotografo e content creator. Mi occupo di immagini, ma il punto di partenza del mio lavoro non è mai soltanto visivo.
-            </p>
-            <p>
-              Lavoro in agenzia, all’interno di <strong className="text-white">Propaganda3</strong>, dove seguo progetti di comunicazione integrata, ma sviluppo anche produzioni autonome e progetti personali. Nel tempo ho collaborato con aziende, brand luxury, realizzazioni industriali e cantine vitivinicole.
-            </p>
-            <p>
-              Un’azienda può aver bisogno di mostrare il proprio processo artigianale. Un brand di lusso di restituire un’atmosfera. Una persona di raccontare la propria storia senza filtri artificiosi. Il mio compito è trovare la misura e la direzione per farlo rimanere impresso.
-            </p>
+            <p>{aboutData.bioParagraph1}</p>
+            <p>{aboutData.bioParagraph2}</p>
+            <p>{aboutData.bioParagraph3}</p>
           </motion.div>
 
           {/* Guiding Questions Card */}
@@ -304,7 +337,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
             <div className="flex items-center gap-2 mb-6">
               <Compass className="w-4 h-4 text-[#FF5A36]" />
               <span className="font-mono text-xs text-[#FF5A36] uppercase tracking-widest font-medium">
-                La bussola prima di ogni ciak
+                {isEn ? 'The compass before every take' : 'La bussola prima di ogni ciak'}
               </span>
             </div>
 
@@ -324,7 +357,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
         <div className="pt-12 border-t border-[#28282D]/40">
           <SectionLabel label="Services & Capabilities" className="mb-6" />
           <h3 className="font-serif italic text-2xl sm:text-4xl text-white mb-8">
-            Linguaggi e strumenti per dare forma ai racconti.
+            {isEn ? 'Tools and visual languages to give shape to stories.' : 'Linguaggi e strumenti per dare forma ai racconti.'}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -361,10 +394,16 @@ export const AboutView: React.FC<AboutViewProps> = ({
               <span>Behind the Lens</span>
             </span>
             <h2 className="font-serif italic text-3xl sm:text-5xl text-white text-balance">
-              Foto e frammenti <span className="font-sans not-italic font-normal">buttati sul tavolo</span>.
+              {isEn ? (
+                <>Photographs and fragments <span className="font-sans not-italic font-normal">scattered on the table</span>.</>
+              ) : (
+                <>Foto e frammenti <span className="font-sans not-italic font-normal">buttati sul tavolo</span>.</>
+              )}
             </h2>
             <p className="font-sans text-xs sm:text-sm text-[#8D8D89] mt-2 max-w-xl">
-              Un archivio aperto di scatti rubati sul set, frames cinematografici e dettagli estrapolati dalle produzioni.
+              {isEn
+                ? 'An open archive of behind-the-scenes moments, cinematic frames, and details gathered across productions.'
+                : 'Un archivio aperto di scatti rubati sul set, frames cinematografici e dettagli estrapolati dalle produzioni.'}
             </p>
           </div>
 
@@ -395,7 +434,9 @@ export const AboutView: React.FC<AboutViewProps> = ({
       {/* 5. CALL TO ACTION BANNER */}
       <section className="py-24 px-4 sm:px-6 lg:px-12 max-w-4xl mx-auto text-center border-t border-[#28282D]/40">
         <h3 className="font-serif italic text-3xl sm:text-5xl text-white mb-6 leading-tight">
-          Non mi interessa soltanto mostrare cosa fai. Mi interessa capire perché qualcuno dovrebbe ricordarlo.
+          {isEn
+            ? 'I am not merely interested in showing what you do. I want to discover why anyone should remember it.'
+            : 'Non mi interessa soltanto mostrare cosa fai. Mi interessa capire perché qualcuno dovrebbe ricordarlo.'}
         </h3>
         <Button
           variant="primary"
@@ -403,7 +444,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
           icon="arrow-right"
           onClick={() => onNavigate('contact')}
         >
-          Raccontami il tuo progetto
+          {isEn ? 'Tell me about your project' : 'Raccontami il tuo progetto'}
         </Button>
       </section>
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RoutePath } from '../types';
 import { Button } from './Button';
 import { useCMS } from '../context/CMSContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Volume2, VolumeX, Play, Pause, Disc } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -13,7 +14,16 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const { siteContent } = useCMS();
-  const heroData = siteContent.hero;
+  const { language, t } = useLanguage();
+
+  const isEn = language === 'en';
+  const heroData = {
+    headline: (isEn && siteContent.en?.hero?.headline) || siteContent.hero.headline,
+    subtitle: (isEn && siteContent.en?.hero?.subtitle) || siteContent.hero.subtitle,
+    bgImage: siteContent.hero.bgImage,
+    availableBadge: (isEn && siteContent.en?.hero?.availableBadge) || siteContent.hero.availableBadge,
+    reelLabel: (isEn && siteContent.en?.hero?.reelLabel) || siteContent.hero.reelLabel,
+  };
 
   return (
     <section className="relative min-h-[100svh] w-full flex flex-col justify-between pt-28 pb-8 px-4 sm:px-6 lg:px-12 bg-[#09090A] overflow-hidden">
@@ -142,7 +152,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
               else onNavigate('projects');
             }}
           >
-            Esplora i progetti
+            {t.labels.exploreProjects}
           </Button>
 
           <Button
@@ -151,7 +161,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
             fullWidthOnMobile
             onClick={() => onNavigate('contact')}
           >
-            Inizia una conversazione
+            {isEn ? 'Start a conversation' : 'Inizia una conversazione'}
           </Button>
         </motion.div>
       </div>

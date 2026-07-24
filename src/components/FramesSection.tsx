@@ -5,6 +5,8 @@ import { Button } from './Button';
 import { LightboxModal } from './LightboxModal';
 import { EditorialCollageBoard } from './EditorialCollageBoard';
 import { Maximize2, Layers, Grid } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedFrame } from '../utils/i18nHelpers';
 
 interface FramesSectionProps {
   frames: FrameItem[];
@@ -20,14 +22,18 @@ export const FramesSection: React.FC<FramesSectionProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [viewMode, setViewMode] = useState<'collage' | 'grid'>('collage');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const { language, t } = useLanguage();
+  const isEn = language === 'en';
+
+  const localizedFrames = frames.map((f) => getLocalizedFrame(f, language));
 
   const categories = ['All', 'People', 'Places', 'Details', 'Motion', 'Personal', 'Work'];
 
   const filteredFrames = selectedCategory === 'All'
-    ? frames
-    : frames.filter(f => f.category === selectedCategory);
+    ? localizedFrames
+    : localizedFrames.filter(f => f.category === selectedCategory);
 
-  const displayFrames = isTeaser ? frames.slice(0, 7) : filteredFrames;
+  const displayFrames = isTeaser ? localizedFrames.slice(0, 7) : filteredFrames;
 
   return (
     <section className="py-24 md:py-32 px-4 sm:px-6 lg:px-12 bg-[#09090A] border-b border-[#28282D]/60 relative">
@@ -38,8 +44,11 @@ export const FramesSection: React.FC<FramesSectionProps> = ({
           <div>
             <SectionLabel number={isTeaser ? '05' : undefined} label="Frames — Visual Archive" className="mb-4" />
             <h2 className="font-serif italic text-3xl sm:text-5xl text-[#F1F0EB] text-balance">
-              Quello che resta <br className="hidden sm:inline" />
-              <span className="font-sans not-italic text-white">tra una storia e l’altra.</span>
+              {isEn ? (
+                <>What lingers <br className="hidden sm:inline" /><span className="font-sans not-italic text-white">between one story and the next.</span></>
+              ) : (
+                <>Quello che resta <br className="hidden sm:inline" /><span className="font-sans not-italic text-white">tra una storia e l’altra.</span></>
+              )}
             </h2>
           </div>
 
@@ -79,7 +88,7 @@ export const FramesSection: React.FC<FramesSectionProps> = ({
                 icon="arrow-right"
                 onClick={() => onNavigate('frames')}
               >
-                Esplora Frames
+                {isEn ? 'Explore Frames' : 'Esplora Frames'}
               </Button>
             )}
           </div>

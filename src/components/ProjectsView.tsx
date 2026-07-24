@@ -4,6 +4,8 @@ import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { Project3DDeck } from './Project3DDeck';
 import { ArrowUpRight, Layers, LayoutGrid } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedProject } from '../utils/i18nHelpers';
 
 interface ProjectsViewProps {
   projects: Project[];
@@ -18,6 +20,10 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>('All');
   const [layoutMode, setLayoutMode] = useState<'3d-deck' | 'editorial'>('3d-deck');
+  const { language, t } = useLanguage();
+  const isEn = language === 'en';
+
+  const localizedProjects = projects.map((p) => getLocalizedProject(p, language));
 
   const categories: ProjectCategory[] = [
     'All',
@@ -31,8 +37,8 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   ];
 
   const filteredProjects = selectedCategory === 'All'
-    ? projects
-    : projects.filter(p => p.category === selectedCategory);
+    ? localizedProjects
+    : localizedProjects.filter(p => p.category === selectedCategory);
 
   return (
     <div className="pt-28 pb-24 px-4 sm:px-6 lg:px-12 bg-[#09090A] min-h-screen relative overflow-hidden">
@@ -48,8 +54,11 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
           
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8">
             <h1 className="font-serif italic text-4xl sm:text-6xl lg:text-7xl text-[#F1F0EB] text-balance">
-              Progetti diversi. <br />
-              <span className="font-sans not-italic text-white font-normal">La stessa attenzione per ciò che conta.</span>
+              {isEn ? (
+                <>Distinct projects. <br /><span className="font-sans not-italic text-white font-normal">The same focus on what truly matters.</span></>
+              ) : (
+                <>Progetti diversi. <br /><span className="font-sans not-italic text-white font-normal">La stessa attenzione per ciò che conta.</span></>
+              )}
             </h1>
 
             {/* View Mode & Filter Stats */}
@@ -83,13 +92,15 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               </div>
 
               <span className="font-mono text-xs text-[#FF5A36] bg-[#121214] px-3.5 py-2 rounded-full border border-[#28282D]">
-                {filteredProjects.length} {filteredProjects.length === 1 ? 'progetto' : 'progetti'}
+                {filteredProjects.length} {isEn ? (filteredProjects.length === 1 ? 'project' : 'projects') : (filteredProjects.length === 1 ? 'progetto' : 'progetti')}
               </span>
             </div>
           </div>
 
           <p className="max-w-2xl text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
-            Film, fotografie, campagne e contenuti costruiti a partire dalle persone, dagli obiettivi e dall’identità di ogni progetto. Non una raccolta rigida, ma una mappa di storie in continuo movimento.
+            {isEn
+              ? 'Films, photographs, campaigns and narratives built from people, goals and individual brand identity. Not a static catalogue, but an evolving archive of stories.'
+              : 'Film, fotografie, campagne e contenuti costruiti a partire dalle persone, dagli obiettivi e dall’identità di ogni progetto. Non una raccolta rigida, ma una mappa di storie in continuo movimento.'}
           </p>
         </div>
 
@@ -114,10 +125,10 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
         {filteredProjects.length === 0 ? (
           <div className="py-20 text-center bg-[#121214]/50 rounded-3xl border border-[#28282D]/40">
             <p className="font-serif italic text-2xl text-[#C9C7C1] mb-4">
-              Nessun progetto disponibile in questa categoria.
+              {isEn ? 'No projects available in this category.' : 'Nessun progetto disponibile in questa categoria.'}
             </p>
             <Button variant="outline" onClick={() => setSelectedCategory('All')}>
-              Mostra tutti i progetti
+              {isEn ? 'Show all projects' : 'Mostra tutti i progetti'}
             </Button>
           </div>
         ) : layoutMode === '3d-deck' ? (
@@ -200,7 +211,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
                     </div>
 
                     <div className="inline-flex items-center gap-3 font-mono text-xs text-[#F1F0EB] group-hover:text-[#FF5A36] transition-colors">
-                      <span className="uppercase tracking-widest font-sans font-medium">Esplora la storia</span>
+                      <span className="uppercase tracking-widest font-sans font-medium">{isEn ? 'Explore story' : 'Esplora la storia'}</span>
                       <div className="w-8 h-8 rounded-full border border-[#28282D] group-hover:border-[#FF5A36] group-hover:bg-[#FF5A36] group-hover:text-white flex items-center justify-center transition-all duration-300">
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </div>
@@ -217,7 +228,9 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
         {/* Free Floating Closing Quote */}
         <div className="mt-28 py-16 text-center max-w-3xl mx-auto border-t border-[#28282D]/40">
           <h3 className="font-serif italic text-3xl sm:text-5xl text-white mb-6 text-balance leading-tight">
-            Ogni progetto richiede un linguaggio diverso. Il punto di partenza, però, resta sempre lo stesso.
+            {isEn
+              ? 'Every project calls for a distinct visual language. Yet the origin always remains the same.'
+              : 'Ogni progetto richiede un linguaggio diverso. Il punto di partenza, però, resta sempre lo stesso.'}
           </h3>
           <Button
             variant="primary"
@@ -225,7 +238,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             icon="arrow-right"
             onClick={() => onNavigate('contact')}
           >
-            Iniziamo da una conversazione
+            {isEn ? 'Let’s start with a conversation' : 'Iniziamo da una conversazione'}
           </Button>
         </div>
 

@@ -4,6 +4,8 @@ import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { ArticleModal } from './ArticleModal';
 import { ArrowUpRight, Clock } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedLabArticle } from '../utils/i18nHelpers';
 
 interface LabSectionProps {
   articles: LabArticle[];
@@ -18,14 +20,18 @@ export const LabSection: React.FC<LabSectionProps> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedArticle, setSelectedArticle] = useState<LabArticle | null>(null);
+  const { language, t } = useLanguage();
+  const isEn = language === 'en';
+
+  const localizedArticles = articles.map((a) => getLocalizedLabArticle(a, language));
 
   const categories = ['All', 'Process', 'Behind the scenes', 'Field notes', 'Experiments', 'Thoughts'];
 
   const filteredArticles = selectedCategory === 'All'
-    ? articles
-    : articles.filter(a => a.category === selectedCategory);
+    ? localizedArticles
+    : localizedArticles.filter(a => a.category === selectedCategory);
 
-  const displayArticles = isTeaser ? articles.slice(0, 3) : filteredArticles;
+  const displayArticles = isTeaser ? localizedArticles.slice(0, 3) : filteredArticles;
 
   return (
     <section className="py-24 md:py-36 px-4 sm:px-6 lg:px-12 bg-[#09090A] relative overflow-hidden">
@@ -40,8 +46,11 @@ export const LabSection: React.FC<LabSectionProps> = ({
           <div>
             <SectionLabel number={isTeaser ? '06' : undefined} label="Lab — Notes & Process" className="mb-4" />
             <h2 className="font-serif italic text-3xl sm:text-5xl text-[#F1F0EB] text-balance">
-              Idee, processi <br className="hidden sm:inline" />
-              <span className="font-sans not-italic text-white">e cose ancora in movimento.</span>
+              {isEn ? (
+                <>Ideas, processes <br className="hidden sm:inline" /><span className="font-sans not-italic text-white">and works still in motion.</span></>
+              ) : (
+                <>Idee, processi <br className="hidden sm:inline" /><span className="font-sans not-italic text-white">e cose ancora in movimento.</span></>
+              )}
             </h2>
           </div>
 
@@ -52,7 +61,7 @@ export const LabSection: React.FC<LabSectionProps> = ({
               icon="arrow-right"
               onClick={() => onNavigate('lab')}
             >
-              Entra nel Lab
+              {isEn ? 'Explore Lab' : 'Entra nel Lab'}
             </Button>
           )}
         </div>

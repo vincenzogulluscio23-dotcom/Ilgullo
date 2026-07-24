@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { RoutePath } from '../types';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../context/LanguageContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface HeaderProps {
   currentRoute: RoutePath;
@@ -11,6 +13,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,11 +29,11 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
   }, []);
 
   const navItems: { label: string; route: RoutePath }[] = [
-    { label: 'PROJECTS', route: 'projects' },
-    { label: 'LAB', route: 'lab' },
-    { label: 'FRAMES', route: 'frames' },
-    { label: 'ABOUT', route: 'about' },
-    { label: 'CONTACT', route: 'contact' },
+    { label: t.nav.projects.toUpperCase(), route: 'projects' },
+    { label: t.nav.lab.toUpperCase(), route: 'lab' },
+    { label: t.nav.frames.toUpperCase(), route: 'frames' },
+    { label: t.nav.about.toUpperCase(), route: 'about' },
+    { label: t.nav.contact.toUpperCase(), route: 'contact' },
   ];
 
   const handleNavClick = (route: RoutePath) => {
@@ -95,6 +98,8 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-4 font-mono text-xs text-[#8D8D89]">
+            <LanguageSwitcher />
+            <span className="text-[#28282D]">•</span>
             <motion.a
               whileHover={{ scale: 1.05 }}
               href="https://www.instagram.com/humera.vision/"
@@ -170,6 +175,8 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
 
             {/* Mobile Menu Footer */}
             <div className="pt-8 border-t border-[#28282D] flex flex-col gap-4 font-mono text-xs text-[#C9C7C1]">
+              <LanguageSwitcher isMobileMenu />
+              
               <div>
                 <span className="block text-[#8D8D89] text-[10px] uppercase tracking-widest mb-1">Direct Contact</span>
                 <a href="mailto:vincenzo@ilgullo.com" className="text-base font-sans text-white hover:text-[#FF5A36]">

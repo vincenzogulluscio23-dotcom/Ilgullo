@@ -43,7 +43,15 @@ export const PROJECTS_DATA: Project[] = [
       specialThanks: 'Cantiere Riva Sarnico'
     },
     featured: true,
-    layoutPattern: 'side-images'
+    layoutPattern: 'side-images',
+    en: {
+      title: 'Aperitime — The Art of Waiting by the Sea',
+      excerpt: 'A cinematic story built around the ritual of an aperitif on board, where time slows down and the setting sun sculpts every detail.',
+      context: 'Riva Yacht needed to capture the feeling of an evening at sea without producing a conventional promo or a simple luxury catalog. The goal was to evoke anticipation, late afternoon light, and the quiet dignity of the water.',
+      pointOfView: 'I chose to focus the camera on subtle, unscripted gestures: hands pouring a glass, water reflections dancing on mahogany, a shared glance before sunset. The yacht becomes the understated backdrop for a genuine connection.',
+      process: 'Filmed over three days on Lake Iseo and the open sea. We relied on 90% natural light during golden and blue hours, utilizing modified vintage lenses for a soft, vibrant grain.',
+      outcome: 'The film headlined the social campaign and international showrooms in Monaco and Miami, achieving exceptional view-through completion and emotional resonance.',
+    }
   },
   {
     id: 'proj-2',
@@ -80,7 +88,15 @@ export const PROJECTS_DATA: Project[] = [
       sound: 'Erbusco Soundscape'
     },
     featured: true,
-    layoutPattern: 'collage'
+    layoutPattern: 'collage',
+    en: {
+      title: 'Matter & Time — The Roots of Franciacorta',
+      excerpt: 'A sensory journey through hands shaping the land and the quiet patience of time in underground Franciacorta cellars.',
+      context: 'Ca\' del Bosco sought a narrative highlighting an obsession with quality and artisanal discipline, steering clear of conventional wine marketing cliches.',
+      pointOfView: 'Structured around the contrast between expansive landscapes and micro-details—soil texture, yeast, water droplets on stone, and winemakers\' quiet rituals.',
+      process: 'Filmed over six months to follow the lifecycle of the vine from winter pruning to night harvest, capturing early morning mist and sacred cellar shadows.',
+      outcome: 'Premiered at Vinitaly and integrated as the key emotional centerpiece for cellar visitor experiences.',
+    }
   },
   {
     id: 'proj-3',
@@ -116,7 +132,15 @@ export const PROJECTS_DATA: Project[] = [
       editing: 'Vincenzo Gulluscio'
     },
     featured: true,
-    layoutPattern: 'full-bleed'
+    layoutPattern: 'full-bleed',
+    en: {
+      title: 'The Unseen Tactility',
+      excerpt: 'A photo and video campaign celebrating tactile materials, fine tailored cuts, and contemporary lightness in Furla accessories.',
+      context: 'Launching the FW24 collection with visual vignettes for digital channels and global flagship boutiques, centering on tactile finishes and clean geometric lines.',
+      pointOfView: 'I framed the campaign by pairing leather craftsmanship with geometric sunlight streaming through iconic Milanese interiors.',
+      process: 'Integrated photo and video sessions with slow, deliberate camera movements and wide-aperture macro photography.',
+      outcome: 'Pan-European campaign achieving over 2.5 million organic impressions across digital platforms.',
+    }
   },
   {
     id: 'proj-4',
@@ -150,7 +174,15 @@ export const PROJECTS_DATA: Project[] = [
       sound: 'Gullo Studio'
     },
     featured: true,
-    layoutPattern: 'typography'
+    layoutPattern: 'typography',
+    en: {
+      title: 'Generations in the Vineyard',
+      excerpt: 'The story of a family and their deep bond with the Piedmont hills, captured through genuine glances and quiet daily work.',
+      context: 'Crafting a brand documentary celebrating family legacy alongside technological evolution in harmony with tradition.',
+      pointOfView: 'No actors, no scripted dialogue. I spent four days alongside the family, capturing unscripted moments around the table and in the vineyard.',
+      process: 'Cinematic documentary filming with ambient audio recording to capture the true sonic presence of historic rooms and fields.',
+      outcome: 'Awarded Best Corporate Brand Film at the Corporate Cinema Festival.',
+    }
   },
   {
     id: 'proj-5',
@@ -184,7 +216,15 @@ export const PROJECTS_DATA: Project[] = [
       editing: 'Vincenzo Gulluscio'
     },
     featured: false,
-    layoutPattern: 'collage'
+    layoutPattern: 'collage',
+    en: {
+      title: 'The Sculpting of Steel',
+      excerpt: 'An aesthetic study of cold metalworking: where heavy press force meets micrometric engineering precision.',
+      context: 'Transforming an industrial stamping plant into a theater of light, rhythm, and robotic precision.',
+      pointOfView: 'Elevating industrial perception by highlighting the symbiotic relationship between master technicians and high-precision machinery.',
+      process: 'Shot with cinema macro lenses capturing sparks, laser cuts, and steel bends at 120 frames per second.',
+      outcome: 'Drove a notable increase in international B2B inquiries on the company portal.',
+    }
   },
   {
     id: 'proj-6',
@@ -217,7 +257,15 @@ export const PROJECTS_DATA: Project[] = [
       cinematography: 'Vincenzo Gulluscio'
     },
     featured: false,
-    layoutPattern: 'side-images'
+    layoutPattern: 'side-images',
+    en: {
+      title: 'Human Energies',
+      excerpt: 'A journey through local sustainable communities reshaping the future of shared energy across Italy.',
+      context: 'Telling real stories of individuals and renewable energy communities emerging in small Italian villages.',
+      pointOfView: 'Maintaining a warm, human perspective on energy as a bond for relationships rather than purely technical utility.',
+      process: 'Itinerant filming across five Italian regions with a nimble crew and natural interactions.',
+      outcome: 'Served as the core visual pillar for the national campaign on community-led sustainability.',
+    }
   },
   {
     id: 'proj-7',
@@ -234,7 +282,7 @@ export const PROJECTS_DATA: Project[] = [
     duration: '1:45 min',
     excerpt: 'Il tunnel degli spogliatoi, l\'odore dell\'erba, l\'attesa dei tifosi e l\'adrenalina prima del fischio d\'inizio.',
     context: 'Catturare il backstage più intimo delle partite casalinghe allo Stadio Alberto Picco con uno stile frenetico e cinematografico.',
-    pointOfView: 'Vivere la partita dal punto di vista dell\'operatore a bordo campo e nello spogliatoio, catturando sguardi di concentrazione e dettagli di maglia.',
+    pointOfView: 'Vivere la partita dal punto vista dell\'operatore a bordo campo e nello spogliatoio, catturando sguardi di concentrazione e dettagli di maglia.',
     process: 'Utilizzo di camera a spalla con stabilizzazione attiva per seguire i giocatori dall\'arrivo del pullman fino all\'uscita dal tunnel.',
     outcome: 'I reel prodotti hanno superato i 4 milioni di riproduzioni totali nel corso della stagione agonistica.',
     coverImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1920&q=85',
@@ -250,7 +298,15 @@ export const PROJECTS_DATA: Project[] = [
       editing: 'Vincenzo Gulluscio'
     },
     featured: false,
-    layoutPattern: 'full-bleed'
+    layoutPattern: 'full-bleed',
+    en: {
+      title: 'Beyond the 90 Minutes',
+      excerpt: 'The changing room tunnel, fresh grass scent, fan anticipation, and raw adrenaline before kick-off.',
+      context: 'Capturing the intimate backstage atmosphere of home matches at Alberto Picco Stadium with a dynamic, cinematic pulse.',
+      pointOfView: 'Experiencing match day from pitch-side and changing rooms, catching fierce focus and shirt textures.',
+      process: 'Active handheld tracking following players from bus arrival all the way through the tunnel entrance.',
+      outcome: 'Reels surpassed 4 million total plays over the competitive season.',
+    }
   },
   {
     id: 'proj-8',
@@ -280,6 +336,14 @@ export const PROJECTS_DATA: Project[] = [
       photography: 'Vincenzo Gulluscio'
     },
     featured: false,
-    layoutPattern: 'side-images'
+    layoutPattern: 'side-images',
+    en: {
+      title: 'Nordic Silence — Personal Research',
+      excerpt: 'A personal photo essay on solitude, low winter Arctic light, and the raw power of wind.',
+      context: 'Building a personal archive of observations outside commercial briefs to nurture visual sensitivity.',
+      pointOfView: 'Capturing spaces where human presence is minute or absent, focusing on natural contours and desaturated hues.',
+      process: 'Three weeks of solo exploration with medium format gear and long exposures.',
+      outcome: 'Featured in an indie editorial publication and a photography exhibition in Brescia.',
+    }
   }
 ];

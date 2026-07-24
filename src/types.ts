@@ -1,3 +1,5 @@
+export type Language = 'it' | 'en';
+
 export type RoutePath = 
   | 'home' 
   | 'projects' 
@@ -161,6 +163,20 @@ export interface Project {
   };
   featured: boolean;
   layoutPattern?: 'side-images' | 'collage' | 'full-bleed' | 'typography';
+  en?: {
+    title?: string;
+    excerpt?: string;
+    context?: string;
+    pointOfView?: string;
+    process?: string;
+    outcome?: string;
+    role?: string;
+    location?: string;
+    category?: ProjectCategory;
+    blocks?: EditorialBlock[];
+    credits?: Record<string, string>;
+    seo?: SEOData;
+  };
 }
 
 export type LabCategory = 
@@ -185,6 +201,14 @@ export interface LabArticle {
   coverImage: string;
   relatedProjectsSlugs?: string[];
   seo?: SEOData;
+  en?: {
+    title?: string;
+    excerpt?: string;
+    content?: string[];
+    readingTime?: string;
+    category?: LabCategory;
+    seo?: SEOData;
+  };
 }
 
 export type FrameCategory = 
@@ -210,6 +234,11 @@ export interface FrameItem {
   featured?: boolean;
   linkedProjectSlug?: string;
   altText?: string;
+  en?: {
+    title?: string;
+    location?: string;
+    category?: FrameCategory;
+  };
 }
 
 export interface ContactFormData {
@@ -246,6 +275,26 @@ export interface SiteContent {
     linkedinUrl: string;
   };
   seo?: SEOData;
+  en?: {
+    hero?: {
+      headline?: string;
+      subtitle?: string;
+      availableBadge?: string;
+      reelLabel?: string;
+    };
+    manifesto?: {
+      mainStatement?: string;
+      subParagraph?: string;
+    };
+    about?: {
+      bioTitle?: string;
+      bioParagraph1?: string;
+      bioParagraph2?: string;
+      bioParagraph3?: string;
+      location?: string;
+    };
+    seo?: SEOData;
+  };
 }
 
 export interface MediaAsset {

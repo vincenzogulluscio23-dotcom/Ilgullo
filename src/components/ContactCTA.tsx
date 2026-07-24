@@ -4,12 +4,16 @@ import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { MessageSquare, Mail } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ContactCTAProps {
   onNavigate: (route: RoutePath) => void;
 }
 
 export const ContactCTA: React.FC<ContactCTAProps> = ({ onNavigate }) => {
+  const { language } = useLanguage();
+  const isEn = language === 'en';
+
   return (
     <section className="py-24 md:py-32 px-4 sm:px-6 lg:px-12 bg-[#FF5A36] text-white relative overflow-hidden">
       
@@ -31,8 +35,11 @@ export const ContactCTA: React.FC<ContactCTAProps> = ({ onNavigate }) => {
           transition={{ duration: 0.8 }}
           className="font-serif italic text-3xl sm:text-5xl md:text-6xl text-white font-normal leading-[1.05] tracking-tight text-balance mb-6"
         >
-          Hai qualcosa che merita <br />
-          di essere <span className="font-sans not-italic font-medium underline underline-offset-8 decoration-white/40">guardato</span> più da vicino?
+          {isEn ? (
+            <>Do you have something <br />deserving a <span className="font-sans not-italic font-medium underline underline-offset-8 decoration-white/40">closer look</span>?</>
+          ) : (
+            <>Hai qualcosa che merita <br />di essere <span className="font-sans not-italic font-medium underline underline-offset-8 decoration-white/40">guardato</span> più da vicino?</>
+          )}
         </motion.h2>
 
         <motion.p
@@ -42,7 +49,9 @@ export const ContactCTA: React.FC<ContactCTAProps> = ({ onNavigate }) => {
           transition={{ duration: 0.8, delay: 0.15 }}
           className="text-base sm:text-lg text-white/90 font-sans leading-relaxed text-pretty max-w-2xl mb-10"
         >
-          Raccontami il progetto, anche se è ancora soltanto un’idea. Possiamo partire da una conversazione e capire insieme quale storia esiste già al suo interno.
+          {isEn
+            ? "Tell me about your project, even if it's currently just an idea. We can start with a conversation and explore the narrative that already lives within it."
+            : "Raccontami il progetto, anche se è ancora soltanto un’idea. Possiamo partire da una conversazione e capire insieme quale storia existe già al suo interno."}
         </motion.p>
 
         <motion.div
@@ -80,7 +89,7 @@ export const ContactCTA: React.FC<ContactCTAProps> = ({ onNavigate }) => {
             className="text-white hover:text-white/80 underline"
             onClick={() => onNavigate('contact')}
           >
-            Vai al form contatti →
+            {isEn ? 'Go to contact form →' : 'Vai al form contatti →'}
           </Button>
         </motion.div>
 

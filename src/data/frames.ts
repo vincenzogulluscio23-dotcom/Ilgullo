@@ -11,7 +11,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '16:9',
     orientation: 'horizontal',
-    featured: true
+    featured: true,
+    en: {
+      title: 'Early Morning Harbor',
+      location: 'Aegean Islands, Greece'
+    }
   },
   {
     id: 'f-2',
@@ -23,7 +27,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '4:3',
     orientation: 'horizontal',
-    featured: true
+    featured: true,
+    en: {
+      title: 'Seaside Fortress',
+      location: 'Rhodes, Greece'
+    }
   },
   {
     id: 'f-3',
@@ -35,7 +43,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1530841377377-3ff06c0ca713?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '4:5',
     orientation: 'vertical',
-    featured: true
+    featured: true,
+    en: {
+      title: 'Anchor along the Promenade',
+      location: 'Symi, Dodecanese'
+    }
   },
   {
     id: 'f-4',
@@ -47,7 +59,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '16:9',
     orientation: 'horizontal',
-    featured: true
+    featured: true,
+    en: {
+      title: 'Pier and Turquoise Waters',
+      location: 'Vernazza, Italy'
+    }
   },
   {
     id: 'f-5',
@@ -59,7 +75,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '3:4',
     orientation: 'vertical',
-    featured: true
+    featured: true,
+    en: {
+      title: 'Shaded Alleyway',
+      location: 'Mykonos, Greece'
+    }
   },
   {
     id: 'f-6',
@@ -71,7 +91,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '4:5',
     orientation: 'vertical',
-    featured: true
+    featured: true,
+    en: {
+      title: 'Blue Staircase',
+      location: 'Santorini, Greece'
+    }
   },
   {
     id: 'f-7',
@@ -83,7 +107,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '3:4',
     orientation: 'vertical',
-    featured: true
+    featured: true,
+    en: {
+      title: 'Walkway to the Horizon',
+      location: 'Kos, Dodecanese'
+    }
   },
   {
     id: 'f-8',
@@ -95,7 +123,11 @@ export const FRAMES_DATA: FrameItem[] = [
     image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=85',
     aspectRatio: '1:1',
     orientation: 'square',
-    featured: false
+    featured: false,
+    en: {
+      title: 'Warm Light on Wooden Shutters',
+      location: 'Ortigia, Syracuse'
+    }
   }
 ];
 

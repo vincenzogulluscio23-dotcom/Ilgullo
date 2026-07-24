@@ -1,35 +1,67 @@
 import React from 'react';
 import { SectionLabel } from './EditorialText';
 import { motion } from 'motion/react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const WhatMattersSection: React.FC = () => {
-  const statementLines = [
-    {
-      italicFirst: true,
-      italicText: 'Atmosfera',
-      sansText: 'prima dell’estetica.',
-    },
-    {
-      italicFirst: false,
-      sansText: 'Autenticità prima della',
-      italicText: 'perfezione.',
-    },
-    {
-      italicFirst: true,
-      italicText: 'Relazioni',
-      sansText: 'prima dei luoghi.',
-    },
-    {
-      italicFirst: false,
-      sansText: 'Emozione prima della',
-      italicText: 'tecnica.',
-    },
-    {
-      italicFirst: true,
-      italicText: 'Intenzione',
-      sansText: 'prima dell’effetto.',
-    },
-  ];
+  const { language } = useLanguage();
+  const isEn = language === 'en';
+
+  const statementLines = isEn
+    ? [
+        {
+          italicFirst: true,
+          italicText: 'Atmosphere',
+          sansText: 'before aesthetics.',
+        },
+        {
+          italicFirst: false,
+          sansText: 'Authenticity before',
+          italicText: 'perfection.',
+        },
+        {
+          italicFirst: true,
+          italicText: 'Relationships',
+          sansText: 'before places.',
+        },
+        {
+          italicFirst: false,
+          sansText: 'Emotion before',
+          italicText: 'technique.',
+        },
+        {
+          italicFirst: true,
+          italicText: 'Intention',
+          sansText: 'before effect.',
+        },
+      ]
+    : [
+        {
+          italicFirst: true,
+          italicText: 'Atmosfera',
+          sansText: 'prima dell’estetica.',
+        },
+        {
+          italicFirst: false,
+          sansText: 'Autenticità prima della',
+          italicText: 'perfezione.',
+        },
+        {
+          italicFirst: true,
+          italicText: 'Relazioni',
+          sansText: 'prima dei luoghi.',
+        },
+        {
+          italicFirst: false,
+          sansText: 'Emozione prima della',
+          italicText: 'tecnica.',
+        },
+        {
+          italicFirst: true,
+          italicText: 'Intentione',
+          sansText: 'prima dell’effetto.',
+        },
+      ];
 
   return (
     <section className="py-24 md:py-36 px-4 sm:px-6 lg:px-12 bg-[#09090A] relative overflow-hidden">
@@ -91,7 +123,9 @@ export const WhatMattersSection: React.FC = () => {
           className="mt-16 pt-8 border-t border-[#28282D]/40 max-w-2xl"
         >
           <p className="text-xs sm:text-sm text-[#8D8D89] font-mono leading-relaxed">
-            Non sono regole assolute. Sono la bussola con cui scelgo cosa mostrare, cosa tralasciare e come dare respiro a ogni storia.
+            {isEn
+              ? 'These are not rigid formulas. They are the compass that guides what to capture, what to omit, and how to give every narrative space to breathe.'
+              : 'Non sono regole assolute. Sono la bussola con cui scelgo cosa mostrare, cosa tralasciare e come dare respiro a ogni storia.'}
           </p>
         </motion.div>
 

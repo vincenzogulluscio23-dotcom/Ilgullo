@@ -3,8 +3,12 @@ import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { ContactFormData } from '../types';
 import { Mail, Phone, MapPin, Instagram, Linkedin, MessageSquare, CheckCircle, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ContactView: React.FC = () => {
+  const { language } = useLanguage();
+  const isEn = language === 'en';
+
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -19,14 +23,14 @@ export const ContactView: React.FC = () => {
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!formData.name.trim()) errs.name = 'Questo campo è obbligatorio.';
+    if (!formData.name.trim()) errs.name = isEn ? 'This field is required.' : 'Questo campo è obbligatorio.';
     if (!formData.email.trim()) {
-      errs.email = 'Questo campo è obbligatorio.';
+      errs.email = isEn ? 'This field is required.' : 'Questo campo è obbligatorio.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errs.email = 'Inserisci un indirizzo email valido.';
+      errs.email = isEn ? 'Please enter a valid email address.' : 'Inserisci un indirizzo email valido.';
     }
-    if (!formData.message.trim()) errs.message = 'Questo campo è obbligatorio.';
-    if (!formData.privacyAccepted) errs.privacyAccepted = 'È necessario accettare l’informativa sulla privacy.';
+    if (!formData.message.trim()) errs.message = isEn ? 'This field is required.' : 'Questo campo è obbligatorio.';
+    if (!formData.privacyAccepted) errs.privacyAccepted = isEn ? 'You must accept the privacy policy.' : 'È necessario accettare l’informativa sulla privacy.';
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -61,12 +65,17 @@ export const ContactView: React.FC = () => {
           <SectionLabel label="Contact" className="mb-4" />
           
           <h1 className="font-serif italic text-4xl sm:text-6xl lg:text-7xl text-[#F1F0EB] text-balance mb-6">
-            Partiamo <br />
-            da quello che <span className="font-sans not-italic text-white font-normal">vuoi raccontare.</span>
+            {isEn ? (
+              <>Let’s begin <br />with what you <span className="font-sans not-italic text-white font-normal">want to tell.</span></>
+            ) : (
+              <>Partiamo <br />da quello che <span className="font-sans not-italic text-white font-normal">vuoi raccontare.</span></>
+            )}
           </h1>
 
           <p className="max-w-2xl text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
-            Puoi scrivermi per un film, un progetto fotografico, una campagna, una collaborazione o anche per un’idea che non ha ancora trovato la propria forma.
+            {isEn
+              ? 'Feel free to reach out for a film, a photography project, a campaign, a brand collaboration, or simply an idea that hasn’t taken shape yet.'
+              : 'Puoi scrivermi per un film, un progetto fotografico, una campagna, una collaborazione o anche per un’idea che non ha ancora trovato la propria forma.'}
           </p>
         </div>
 
@@ -100,7 +109,7 @@ export const ContactView: React.FC = () => {
                 <span>+39 320 640 6483</span>
               </a>
               <p className="text-xs font-mono text-[#8D8D89]">
-                Per comunicazioni rapide puoi contattarmi direttamente anche su WhatsApp.
+                {isEn ? 'For quick communication, you can also reach me directly on WhatsApp.' : 'Per comunicazioni rapide puoi contattarmi direttamente anche su WhatsApp.'}
               </p>
             </div>
 
@@ -111,8 +120,8 @@ export const ContactView: React.FC = () => {
                 <MapPin className="w-4 h-4 text-[#FF5A36] shrink-0 mt-0.5" />
                 <div>
                   <p className="text-white font-sans text-sm font-medium">Via Castrezzato 12E</p>
-                  <p>25039 Travagliato BS — Italia</p>
-                  <p className="text-[#8D8D89] mt-2 text-[11px]">Gli incontri vengono concordati su appuntamento.</p>
+                  <p>25039 Travagliato BS — Italy</p>
+                  <p className="text-[#8D8D89] mt-2 text-[11px]">{isEn ? 'Meetings arranged by appointment.' : 'Gli incontri vengono concordati su appuntamento.'}</p>
                 </div>
               </div>
             </div>
@@ -144,7 +153,7 @@ export const ContactView: React.FC = () => {
               </div>
 
               <div className="pt-4 border-t border-[#28282D]">
-                <span className="text-[#8D8D89] block mb-1">Dati Fiscali</span>
+                <span className="text-[#8D8D89] block mb-1">{isEn ? 'Tax Details' : 'Dati Fiscali'}</span>
                 <span className="text-[#C9C7C1]">Vincenzo Gulluscio · P. IVA 04700280987</span>
               </div>
             </div>
@@ -154,7 +163,7 @@ export const ContactView: React.FC = () => {
           {/* Contact Form Column */}
           <div className="lg:col-span-7 bg-[#121214] border border-[#28282D] rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl">
             <span className="font-mono text-xs text-[#FF5A36] uppercase tracking-widest block mb-6">
-              Invia un messaggio
+              {isEn ? 'Send a message' : 'Invia un messaggio'}
             </span>
 
             {status === 'success' ? (
@@ -162,15 +171,15 @@ export const ContactView: React.FC = () => {
                 <div className="w-16 h-16 rounded-full bg-[#FF5A36]/10 text-[#FF5A36] flex items-center justify-center mx-auto">
                   <CheckCircle className="w-8 h-8" />
                 </div>
-                <h3 className="font-serif italic text-3xl text-white">Grazie!</h3>
+                <h3 className="font-serif italic text-3xl text-white">{isEn ? 'Thank you!' : 'Grazie!'}</h3>
                 <p className="text-sm font-mono text-[#C9C7C1] max-w-md mx-auto">
-                  Il messaggio è stato inviato correttamente. Ti risponderò appena possibile.
+                  {isEn ? 'Your message has been sent successfully. I will get back to you as soon as possible.' : 'Il messaggio è stato inviato correttamente. Ti risponderò appena possibile.'}
                 </p>
                 <Button
                   variant="outline"
                   onClick={() => setStatus('idle')}
                 >
-                  Invia un altro messaggio
+                  {isEn ? 'Send another message' : 'Invia un altro messaggio'}
                 </Button>
               </div>
             ) : (
@@ -179,11 +188,11 @@ export const ContactView: React.FC = () => {
                 {/* Name */}
                 <div>
                   <label className="block font-mono text-xs text-[#C9C7C1] uppercase tracking-wider mb-2">
-                    Nome <span className="text-[#FF5A36]">*</span>
+                    {isEn ? 'Name' : 'Nome'} <span className="text-[#FF5A36]">*</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="Come ti chiami?"
+                    placeholder={isEn ? 'What is your name?' : 'Come ti chiami?'}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-[#09090A] border border-[#28282D] text-white placeholder-[#8D8D89] text-sm font-sans focus:outline-none focus:border-[#FF5A36] transition-colors"
@@ -198,7 +207,7 @@ export const ContactView: React.FC = () => {
                   </label>
                   <input
                     type="email"
-                    placeholder="La tua email"
+                    placeholder={isEn ? 'Your email address' : 'La tua email'}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-[#09090A] border border-[#28282D] text-white placeholder-[#8D8D89] text-sm font-sans focus:outline-none focus:border-[#FF5A36] transition-colors"
@@ -209,11 +218,11 @@ export const ContactView: React.FC = () => {
                 {/* Company */}
                 <div>
                   <label className="block font-mono text-xs text-[#C9C7C1] uppercase tracking-wider mb-2">
-                    Azienda o Agenzia
+                    {isEn ? 'Company or Agency' : 'Azienda o Agenzia'}
                   </label>
                   <input
                     type="text"
-                    placeholder="Azienda per cui mi contatti (opzionale)"
+                    placeholder={isEn ? 'Company you are contacting me for (optional)' : 'Azienda per cui mi contatti (opzionale)'}
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-[#09090A] border border-[#28282D] text-white placeholder-[#8D8D89] text-sm font-sans focus:outline-none focus:border-[#FF5A36] transition-colors"
@@ -223,11 +232,11 @@ export const ContactView: React.FC = () => {
                 {/* Project Type */}
                 <div>
                   <label className="block font-mono text-xs text-[#C9C7C1] uppercase tracking-wider mb-2">
-                    Tipologia di Progetto
+                    {isEn ? 'Project Category' : 'Tipologia di Progetto'}
                   </label>
                   <input
                     type="text"
-                    placeholder="Film corporate, fotografia, campagne, social..."
+                    placeholder={isEn ? 'Corporate film, photography, campaign, social...' : 'Film corporate, fotografia, campagne, social...'}
                     value={formData.projectType}
                     onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                     className="w-full min-h-[48px] px-4 py-3 rounded-xl bg-[#09090A] border border-[#28282D] text-white placeholder-[#8D8D89] text-sm font-sans focus:outline-none focus:border-[#FF5A36] transition-colors"
@@ -237,11 +246,11 @@ export const ContactView: React.FC = () => {
                 {/* Message */}
                 <div>
                   <label className="block font-mono text-xs text-[#C9C7C1] uppercase tracking-wider mb-2">
-                    Messaggio <span className="text-[#FF5A36]">*</span>
+                    {isEn ? 'Message' : 'Messaggio'} <span className="text-[#FF5A36]">*</span>
                   </label>
                   <textarea
                     rows={5}
-                    placeholder="Raccontami il progetto, il contesto e cosa vorresti realizzare."
+                    placeholder={isEn ? 'Tell me about your project, the context, and what you would like to create.' : 'Raccontami il progetto, il contesto e cosa vorresti realizzare.'}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full min-h-[140px] px-4 py-3 rounded-xl bg-[#09090A] border border-[#28282D] text-white placeholder-[#8D8D89] text-sm font-sans focus:outline-none focus:border-[#FF5A36] transition-colors resize-y"
@@ -259,7 +268,9 @@ export const ContactView: React.FC = () => {
                     className="mt-1 w-4 h-4 rounded border-[#28282D] bg-[#09090A] text-[#FF5A36] focus:ring-[#FF5A36]"
                   />
                   <label htmlFor="privacyAccepted" className="font-mono text-xs text-[#8D8D89] leading-relaxed cursor-pointer">
-                    Ho letto l’informativa sulla privacy e acconsento al trattamento dei dati personali necessari per ricevere una risposta.
+                    {isEn
+                      ? 'I have read the privacy policy and consent to the processing of personal data necessary to receive a response.'
+                      : 'Ho letto l’informativa sulla privacy e acconsento al trattamento dei dati personali necessari per ricevere una risposta.'}
                   </label>
                 </div>
                 {errors.privacyAccepted && <span className="font-mono text-[11px] text-[#FF5A36] block">{errors.privacyAccepted}</span>}
@@ -272,11 +283,11 @@ export const ContactView: React.FC = () => {
                   fullWidthOnMobile
                   disabled={status === 'sending'}
                 >
-                  {status === 'sending' ? 'Invio in corso...' : 'Invia il messaggio'}
+                  {status === 'sending' ? (isEn ? 'Sending...' : 'Invio in corso...') : (isEn ? 'Send Message' : 'Invia il messaggio')}
                 </Button>
 
                 <p className="font-mono text-[11px] text-[#8D8D89] text-center pt-2">
-                  Cerco di rispondere a ogni richiesta nel minor tempo possibile.
+                  {isEn ? 'I aim to respond to every inquiry as promptly as possible.' : 'Cerco di rispondere a ogni richiesta nel minor tempo possibile.'}
                 </p>
 
               </form>

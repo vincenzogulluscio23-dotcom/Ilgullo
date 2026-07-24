@@ -24,4 +24,23 @@ export const INITIAL_SITE_CONTENT: SiteContent = {
     vimeoUrl: "https://vimeo.com/vincenzogulluscio",
     linkedinUrl: "https://linkedin.com/in/vincenzogulluscio",
   },
+  en: {
+    hero: {
+      headline: "Stories are already everywhere. We just need to pause and truly observe them.",
+      subtitle: "I craft films, photography, and editorial content for brands, agencies, and individuals seeking to tell their story with authenticity, intention, and character.",
+      availableBadge: "Available for selected projects",
+      reelLabel: "REEL 2026",
+    },
+    manifesto: {
+      mainStatement: "I don't just look for beautiful imagery. I look for people, relationships, and moments that leave a lasting imprint.",
+      subParagraph: "My work begins with observation. Long before framing a shot or choosing a camera, I immerse myself in understanding what makes a story genuine.",
+    },
+    about: {
+      bioTitle: "An approach rooted in observation and visual clarity.",
+      bioParagraph1: "I am a filmmaker, photographer, and director based in Reggio Calabria, working across Italy and internationally. I partner with brands, agencies, and individuals to translate identities, human stories, and vision into resonant, tailored visual narratives.",
+      bioParagraph2: "My focus lies in balancing cinematic refinement, candid human expression, and strategic purpose.",
+      bioParagraph3: "A company may need to showcase its artisanal craftsmanship; a luxury house, to evoke a singular atmosphere; an individual, to share their journey without artificial filters. My role is to define the exact tone and direction that ensures it lingers.",
+      location: "Reggio Calabria / Milan, Italy",
+    },
+  },
 };

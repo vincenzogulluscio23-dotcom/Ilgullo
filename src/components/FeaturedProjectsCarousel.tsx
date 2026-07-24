@@ -3,6 +3,8 @@ import { Project, RoutePath } from '../types';
 import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { Project3DDeck } from './Project3DDeck';
+import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedProject } from '../utils/i18nHelpers';
 
 interface FeaturedProjectsCarouselProps {
   projects: Project[];
@@ -15,8 +17,10 @@ export const FeaturedProjectsCarousel: React.FC<FeaturedProjectsCarouselProps> =
   onSelectProject,
   onNavigate,
 }) => {
-  const featured = projects.filter((p) => p.featured);
-  const displayProjects = featured.length > 0 ? featured : projects;
+  const { language, t } = useLanguage();
+  const localizedProjects = projects.map((p) => getLocalizedProject(p, language));
+  const featured = localizedProjects.filter((p) => p.featured);
+  const displayProjects = featured.length > 0 ? featured : localizedProjects;
 
   return (
     <section id="featured-projects" className="py-24 md:py-32 px-4 sm:px-6 lg:px-12 bg-[#09090A] relative overflow-hidden">
@@ -29,9 +33,13 @@ export const FeaturedProjectsCarousel: React.FC<FeaturedProjectsCarouselProps> =
         {/* Editorial Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
-            <SectionLabel number="02" label="Selected projects" className="mb-4" />
+            <SectionLabel number="02" label={language === 'it' ? 'Progetti selezionati' : 'Selected projects'} className="mb-4" />
             <h2 className="font-serif italic text-3xl sm:text-5xl lg:text-6xl text-[#F1F0EB] text-balance">
-              Storie costruite da <span className="font-sans not-italic text-white font-normal">punti di vista</span> diversi.
+              {language === 'it' ? (
+                <>Storie costruite da <span className="font-sans not-italic text-white font-normal">punti di vista</span> diversi.</>
+              ) : (
+                <>Stories shaped through <span className="font-sans not-italic text-white font-normal">distinct perspectives</span>.</>
+              )}
             </h2>
           </div>
 
@@ -40,7 +48,7 @@ export const FeaturedProjectsCarousel: React.FC<FeaturedProjectsCarouselProps> =
               variant="pill"
               onClick={() => onNavigate('projects')}
             >
-              Tutti i progetti ({projects.length})
+              {t.labels.allProjects} ({projects.length})
             </Button>
           </div>
         </div>

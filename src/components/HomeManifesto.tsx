@@ -3,6 +3,7 @@ import { RoutePath } from '../types';
 import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { useCMS } from '../context/CMSContext';
+import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'motion/react';
 
 interface HomeManifestoProps {
@@ -11,7 +12,13 @@ interface HomeManifestoProps {
 
 export const HomeManifesto: React.FC<HomeManifestoProps> = ({ onNavigate }) => {
   const { siteContent } = useCMS();
-  const manifesto = siteContent.manifesto;
+  const { language } = useLanguage();
+
+  const isEn = language === 'en';
+  const manifesto = {
+    mainStatement: (isEn && siteContent.en?.manifesto?.mainStatement) || siteContent.manifesto.mainStatement,
+    subParagraph: (isEn && siteContent.en?.manifesto?.subParagraph) || siteContent.manifesto.subParagraph,
+  };
 
   return (
     <section className="py-24 md:py-36 px-4 sm:px-6 lg:px-12 bg-[#09090A] relative overflow-hidden">
@@ -59,7 +66,7 @@ export const HomeManifesto: React.FC<HomeManifestoProps> = ({ onNavigate }) => {
               icon="arrow-right"
               onClick={() => onNavigate('about')}
             >
-              Scopri il mio approccio
+              {isEn ? 'Discover my approach' : 'Scopri il mio approccio'}
             </Button>
           </div>
         </motion.div>
