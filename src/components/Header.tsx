@@ -106,15 +106,13 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
               <ArrowUpRight className="w-3 h-3" />
             </motion.a>
             <span className="text-[#28282D]">•</span>
-            <button
-              onClick={() => handleNavClick('cms')}
-              className={`px-3 py-1 rounded-full border border-[#28282D] hover:border-[#FF5A36] transition-colors text-[11px] font-mono flex items-center gap-1.5 ${
-                currentRoute === 'cms' ? 'bg-[#FF5A36] text-white border-[#FF5A36]' : 'text-[#8D8D89] hover:text-white'
-              }`}
-              title="Pannello Amministrazione CMS"
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              href="mailto:vincenzo@ilgullo.com"
+              className="hover:text-[#FF5A36] transition-colors duration-300 text-xs"
             >
-              <span>CMS</span>
-            </button>
+              vincenzo@ilgullo.com
+            </motion.a>
           </div>
 
           {/* Mobile Menu Toggle Button */}

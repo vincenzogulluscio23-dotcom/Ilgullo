@@ -29,12 +29,49 @@ function MainAppContent() {
 
   const { projects, frames, articles } = useCMS();
 
+  // Check URL path, query parameters, or hash on load for external CMS link access (/superman)
+  React.useEffect(() => {
+    const checkCMSAccess = () => {
+      const pathname = window.location.pathname.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      const hash = window.location.hash.toLowerCase();
+
+      if (
+        pathname.includes('superman') ||
+        params.get('superman') !== null ||
+        params.get('cms') === 'true' ||
+        params.get('cms') === '1' ||
+        params.get('admin') === 'true' ||
+        params.get('admin') === '1' ||
+        params.get('admin') === 'gullo' ||
+        hash === '#superman' ||
+        hash === '#cms' ||
+        hash === '#admin'
+      ) {
+        setCurrentRoute('cms');
+      }
+    };
+
+    checkCMSAccess();
+    window.addEventListener('popstate', checkCMSAccess);
+    return () => window.removeEventListener('popstate', checkCMSAccess);
+  }, []);
+
   // Handle browser back/forward and hash or direct state transitions
   const handleNavigate = (route: RoutePath) => {
     setCurrentRoute(route);
     if (route !== 'project-detail') {
       setActiveProjectSlug(null);
     }
+
+    if (route === 'cms') {
+      if (!window.location.pathname.toLowerCase().includes('superman')) {
+        window.history.pushState({}, '', '/superman');
+      }
+    } else if (window.location.pathname.toLowerCase().includes('superman')) {
+      window.history.pushState({}, '', '/');
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

@@ -141,10 +141,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </button>
               <button
                 onClick={() => { onNavigate('cms'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="text-left text-[#FF5A36] hover:text-white transition-colors flex items-center gap-1 font-semibold"
+                className="text-left text-[#8D8D89]/50 hover:text-[#FF5A36] transition-colors text-[10px]"
               >
-                <span>Area Riservata / CMS</span>
-                <span>→</span>
+                Area Riservata CMS
               </button>
             </div>
           </div>

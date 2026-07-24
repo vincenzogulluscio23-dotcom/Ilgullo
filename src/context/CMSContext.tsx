@@ -22,6 +22,7 @@ interface CMSContextType {
   logout: () => void;
   adminPassword: string;
   updateAdminPassword: (newPass: string) => void;
+  setAdminPassword: (newPass: string) => void;
 
   projects: Project[];
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
@@ -232,6 +233,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         logout,
         adminPassword,
         updateAdminPassword,
+        setAdminPassword: updateAdminPassword,
         projects,
         setProjects,
         addProject,

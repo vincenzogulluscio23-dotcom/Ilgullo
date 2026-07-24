@@ -20,6 +20,103 @@ export type ProjectCategory =
   | 'Social'
   | 'Personal';
 
+export type ProjectTemplate =
+  | 'Editorial'
+  | 'Visual Story'
+  | 'Case Study'
+  | 'Film'
+  | 'Gallery'
+  | 'Sticky Story';
+
+export type ImageCropPreference = 'auto' | 'fit' | 'cover' | 'custom';
+export type ImageOrientation = 'vertical' | 'horizontal' | 'square' | 'panoramic';
+
+export interface EditorialImage {
+  id: string;
+  url: string;
+  altText?: string;
+  caption?: string;
+  credit?: string;
+  hotspot?: { x: number; y: number }; // percentage 0-100
+  cropPreference?: ImageCropPreference;
+  orientation?: ImageOrientation;
+}
+
+export type GalleryLayoutMode =
+  | 'vertical'
+  | 'horizontal'
+  | 'collage'
+  | 'masonry'
+  | 'slider'
+  | 'dual-image'
+  | 'alternate'
+  | 'photo-sequence';
+
+export type VideoPreset = 'hero' | 'reel' | 'background' | 'normal';
+
+export interface VideoMedia {
+  url: string;
+  poster?: string;
+  preset?: VideoPreset;
+  vimeoId?: string;
+  youtubeId?: string;
+  caption?: string;
+}
+
+export type MediaSequenceItemType = 'photo' | 'video' | 'text' | 'quote' | 'divider';
+
+export interface MediaSequenceItem {
+  id: string;
+  type: MediaSequenceItemType;
+  image?: EditorialImage;
+  video?: VideoMedia;
+  text?: string;
+  quote?: string;
+  author?: string;
+}
+
+export type BlockType =
+  | 'hero'
+  | 'text'
+  | 'text-image'
+  | 'text-video'
+  | 'gallery'
+  | 'adaptive-gallery'
+  | 'media-sequence'
+  | 'sticky-story'
+  | 'slideshow'
+  | 'chapter'
+  | 'quote'
+  | 'process'
+  | 'backstage'
+  | 'credits'
+  | 'outro';
+
+export interface EditorialBlock {
+  id: string;
+  type: BlockType;
+  title?: string;
+  subtitle?: string;
+  content?: string;
+  quote?: string;
+  author?: string;
+  layout?: GalleryLayoutMode;
+  images?: EditorialImage[];
+  video?: VideoMedia;
+  sequence?: MediaSequenceItem[];
+  items?: Array<{ title: string; description: string }>;
+  credits?: Record<string, string>;
+  stickyText?: string;
+}
+
+export interface SEOData {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonical?: string;
+  keywords?: string;
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -43,6 +140,10 @@ export interface Project {
   heroVideoPoster?: string;
   galleryImages: string[];
   sideImages?: string[];
+  imagesData?: EditorialImage[];
+  blocks?: EditorialBlock[];
+  template?: ProjectTemplate;
+  seo?: SEOData;
   credits: {
     client?: string;
     agency?: string;
@@ -83,6 +184,7 @@ export interface LabArticle {
   readingTime: string;
   coverImage: string;
   relatedProjectsSlugs?: string[];
+  seo?: SEOData;
 }
 
 export type FrameCategory = 
@@ -106,6 +208,8 @@ export interface FrameItem {
   aspectRatio: '16:9' | '16:10' | '4:3' | '3:4' | '4:5' | '3:2' | '9:16' | '1:1';
   orientation: 'horizontal' | 'vertical' | 'square';
   featured?: boolean;
+  linkedProjectSlug?: string;
+  altText?: string;
 }
 
 export interface ContactFormData {
@@ -141,6 +245,7 @@ export interface SiteContent {
     vimeoUrl: string;
     linkedinUrl: string;
   };
+  seo?: SEOData;
 }
 
 export interface MediaAsset {
@@ -150,4 +255,8 @@ export interface MediaAsset {
   category: 'projects' | 'frames' | 'hero' | 'general';
   uploadedAt: string;
   size?: string;
+  orientation?: ImageOrientation;
+  client?: string;
+  year?: string;
 }
+
