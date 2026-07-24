@@ -1,0 +1,6 @@
+{
+  "name": "Gullo — Filmmaker, Photographer & Storyteller",
+  "description": "Filmmaking, fotografia e storytelling per aziende, agenzie e persone che hanno qualcosa di reale da raccontare.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
