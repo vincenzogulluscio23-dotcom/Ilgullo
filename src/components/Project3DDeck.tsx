@@ -136,8 +136,10 @@ export const Project3DDeck: React.FC<Project3DDeckProps> = ({
                 <img
                   src={project.coverImage}
                   alt={project.title}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover select-none pointer-events-none"
+                  className="w-full h-full object-cover select-none pointer-events-none will-change-transform"
                 />
 
                 {/* Subtle Gradient Film Overlay */}

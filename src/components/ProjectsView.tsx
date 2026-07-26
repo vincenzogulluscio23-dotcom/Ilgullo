@@ -163,8 +163,10 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
                     <img
                       src={project.coverImage}
                       alt={project.title}
+                      loading="lazy"
+                      decoding="async"
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out will-change-transform"
                     />
                     
                     {/* Floating Pill Tag */}

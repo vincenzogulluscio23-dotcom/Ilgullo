@@ -112,11 +112,11 @@ export const CMSLogin: React.FC<CMSLoginProps> = ({ onNavigate }) => {
             </button>
           </form>
 
-          {/* Quick Helper Banner */}
+          {/* Secured Area Note */}
           <div className="mt-8 pt-6 border-t border-[#28282D]/60 flex items-center gap-3 bg-[#09090A]/60 p-3.5 rounded-xl border border-white/5">
             <Sparkles className="w-4 h-4 text-[#FF5A36] shrink-0" />
             <p className="text-[11px] text-[#8D8D89] font-mono leading-tight">
-              Password predefinita: <code className="text-[#FF5A36] font-bold">gullo2026</code>
+              Accesso protetto riservato al personale autorizzato di Gullo Studio.
             </p>
           </div>
 

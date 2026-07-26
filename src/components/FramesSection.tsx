@@ -4,6 +4,7 @@ import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { LightboxModal } from './LightboxModal';
 import { EditorialCollageBoard } from './EditorialCollageBoard';
+import { SectionHeaderReveal, ScrollReveal } from './motion/ScrollReveal';
 import { Maximize2, Layers, Grid } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getLocalizedFrame } from '../utils/i18nHelpers';

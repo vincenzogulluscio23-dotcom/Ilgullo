@@ -233,6 +233,7 @@ export interface FrameItem {
   orientation: 'horizontal' | 'vertical' | 'square';
   featured?: boolean;
   linkedProjectSlug?: string;
+  projectId?: string;
   altText?: string;
   en?: {
     title?: string;

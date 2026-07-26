@@ -436,6 +436,39 @@ export const saveMediaAssetsToStorage = (media: MediaAsset[]) => {
   localStorage.setItem(STORAGE_KEYS.MEDIA_ASSETS, JSON.stringify(media));
 };
 
+export const syncServerCMSData = async (data: {
+  projects?: Project[];
+  frames?: FrameItem[];
+  articles?: LabArticle[];
+  siteContent?: SiteContent;
+  mediaAssets?: MediaAsset[];
+}) => {
+  try {
+    await fetch('/api/cms/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    console.warn('Server sync skipped:', e);
+  }
+};
+
+export const fetchServerCMSData = async () => {
+  try {
+    const res = await fetch('/api/cms/data');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.status !== 'empty') {
+        return data;
+      }
+    }
+  } catch (e) {
+    console.warn('Server fetch skipped:', e);
+  }
+  return null;
+};
+
 export const resetAllCMSToDefaults = () => {
   localStorage.removeItem(STORAGE_KEYS.PROJECTS);
   localStorage.removeItem(STORAGE_KEYS.FRAMES);

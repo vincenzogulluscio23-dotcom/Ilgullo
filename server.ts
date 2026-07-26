@@ -11,6 +11,42 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  app.use(express.json({ limit: '50mb' }));
+
+  // Persistent Server-Side CMS Database File
+  const DATA_DIR = path.join(process.cwd(), 'data');
+  const DB_FILE = path.join(DATA_DIR, 'cms-db.json');
+
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+
+  // GET /api/cms/data
+  app.get('/api/cms/data', (req, res) => {
+    try {
+      if (fs.existsSync(DB_FILE)) {
+        const content = fs.readFileSync(DB_FILE, 'utf-8');
+        return res.json(JSON.parse(content));
+      }
+      return res.json({ status: 'empty' });
+    } catch (e) {
+      console.error('Error reading CMS DB:', e);
+      return res.status(500).json({ error: 'Failed to read CMS DB' });
+    }
+  });
+
+  // POST /api/cms/data
+  app.post('/api/cms/data', (req, res) => {
+    try {
+      const data = req.body;
+      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+      return res.json({ status: 'success', savedAt: new Date().toISOString() });
+    } catch (e) {
+      console.error('Error writing CMS DB:', e);
+      return res.status(500).json({ error: 'Failed to save CMS DB' });
+    }
+  });
+
   // Serve static dist folder or Vite middleware based on environment
   if (process.env.NODE_ENV === 'production') {
     const distPath = path.join(process.cwd(), 'dist');

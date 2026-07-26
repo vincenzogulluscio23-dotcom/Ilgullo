@@ -81,7 +81,7 @@ export const WhatMattersSection: React.FC = () => {
         <SectionLabel number="04" label="What matters" className="mb-12 md:mb-16" />
 
         {/* Big Display Typography Block matching reference screenshot */}
-        <div className="space-y-3 sm:space-y-4 md:space-y-6 text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans tracking-tight leading-[1.15] md:leading-[1.1]">
+        <div className="space-y-4 sm:space-y-6 md:space-y-8 text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans tracking-tight leading-[1.15] md:leading-[1.1]">
           {statementLines.map((line, idx) => (
             <motion.div
               key={idx}
@@ -89,27 +89,32 @@ export const WhatMattersSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.8, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="group cursor-default transition-all duration-300 hover:translate-x-2"
+              className="group cursor-default transition-all duration-300 hover:translate-x-2 flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6"
             >
-              {line.italicFirst ? (
-                <>
-                  <span className="font-serif italic font-normal text-white group-hover:text-[#FF5A36] transition-colors duration-300">
-                    {line.italicText}
-                  </span>{' '}
-                  <span className="font-sans font-normal text-[#F1F0EB] group-hover:text-white transition-colors duration-300">
-                    {line.sansText}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="font-sans font-normal text-[#F1F0EB] group-hover:text-white transition-colors duration-300">
-                    {line.sansText}
-                  </span>{' '}
-                  <span className="font-serif italic font-normal text-white group-hover:text-[#FF5A36] transition-colors duration-300">
-                    {line.italicText}
-                  </span>
-                </>
-              )}
+              <span className="font-mono text-xs sm:text-sm text-[#FF5A36] tracking-widest shrink-0 opacity-80">
+                0{idx + 1} /
+              </span>
+              <div>
+                {line.italicFirst ? (
+                  <>
+                    <span className="font-serif italic font-normal text-white group-hover:text-[#FF5A36] transition-colors duration-300">
+                      {line.italicText}
+                    </span>{' '}
+                    <span className="font-sans font-normal text-[#F1F0EB] group-hover:text-white transition-colors duration-300">
+                      {line.sansText}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="font-sans font-normal text-[#F1F0EB] group-hover:text-white transition-colors duration-300">
+                      {line.sansText}
+                    </span>{' '}
+                    <span className="font-serif italic font-normal text-white group-hover:text-[#FF5A36] transition-colors duration-300">
+                      {line.italicText}
+                    </span>
+                  </>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>

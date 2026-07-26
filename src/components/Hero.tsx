@@ -5,6 +5,7 @@ import { useCMS } from '../context/CMSContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Volume2, VolumeX, Play, Pause, Disc } from 'lucide-react';
 import { motion } from 'motion/react';
+import { IssueBadge, CoordinatesTag } from './EditorialText';
 
 interface HeroProps {
   onNavigate: (route: RoutePath) => void;
@@ -42,8 +43,10 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
           }}
           src={heroData.bgImage || "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1920&q=85"}
           alt="Gullo Cinematic Background"
+          loading="eager"
+          decoding="async"
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center will-change-transform"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#09090A] via-[#09090A]/70 to-[#09090A]/90" />
         
@@ -64,6 +67,8 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
 
         {/* Floating Controls */}
         <div className="absolute top-28 right-6 sm:right-12 flex items-center gap-3 z-20">
+          <IssueBadge volume="ISSUE N° 04" issue="2026 EDITION" className="hidden lg:inline-flex" />
+
           {/* Animated Film Reel indicator */}
           <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#121214]/70 border border-white/10 backdrop-blur-md text-[11px] font-mono text-[#C9C7C1]">
             <motion.div
@@ -102,21 +107,26 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1 }}
-        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 font-mono text-xs text-[#8D8D89]"
+        className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs text-[#8D8D89]"
       >
         <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-[#FF5A36] animate-pulse"></span>
           <span className="uppercase tracking-widest text-[#C9C7C1]">Filmmaker · Photographer · Storyteller</span>
         </div>
-        <div className="flex items-center gap-4 text-[11px]">
-          <span>Travagliato, Brescia — IT</span>
-          <span className="hidden sm:inline text-[#28282D]">•</span>
-          <span className="text-[#FF5A36]">Available for selected projects</span>
-        </div>
+        <CoordinatesTag location="BRESCIA, ITALY" coords="45°32'N 10°02'E" />
       </motion.div>
 
       {/* Hero Center Display Headline */}
       <div className="relative z-10 max-w-5xl mx-auto w-full my-auto text-center py-12 md:py-16">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="inline-block mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#FF5A36] bg-[#FF5A36]/10 px-3 py-1 rounded-full border border-[#FF5A36]/20"
+        >
+          [ ARCHIVE INDEX · VINCENZO GULLUSCIO ]
+        </motion.div>
+
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -173,16 +183,19 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
         transition={{ duration: 0.8, delay: 0.8 }}
         className="relative z-10 max-w-7xl mx-auto w-full flex items-center justify-between font-mono text-[11px] text-[#8D8D89] pt-4 border-t border-[#28282D]/30"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <span className="inline-block w-1.5 h-1.5 bg-[#FF5A36] rounded-full"></span>
-          <span className="uppercase tracking-widest text-[10px]">Scroll to explore</span>
+          <span className="uppercase tracking-widest text-[10px]">SCROLL TO EXPLORE ARCHIVE</span>
         </div>
-        <div className="hidden sm:block">
-          <span>Gullo Studio © 2026</span>
+        <div className="hidden sm:flex items-center gap-4 text-[10px] text-[#8D8D89]">
+          <span>CINEMATOGRAPHY & DOCUMENTARY</span>
+          <span className="text-[#28282D]">•</span>
+          <span>GULLO STUDIO © 2026</span>
         </div>
       </motion.div>
 
     </section>
   );
 };
+
 

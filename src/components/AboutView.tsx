@@ -8,6 +8,8 @@ import { OverlappingTabletopCollage } from './OverlappingTabletopCollage';
 import { useLanguage } from '../context/LanguageContext';
 import { useCMS } from '../context/CMSContext';
 import { motion, AnimatePresence } from 'motion/react';
+import { StackImage } from './StackImage';
+import { SectionHeaderReveal } from './motion/ScrollReveal';
 import {
   MapPin,
   Globe,
@@ -22,6 +24,7 @@ interface AboutViewProps {
   onNavigate: (route: RoutePath) => void;
   onSelectProject?: (slug: string) => void;
 }
+
 
 interface DynamicMediaItem {
   id: string;
@@ -305,26 +308,50 @@ export const AboutView: React.FC<AboutViewProps> = ({
 
       {/* 3. PERSONAL PRESENTATION & BIOGRAPHY */}
       <section className="py-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
-        <SectionLabel label="Bio & Vision" className="mb-8" />
+        <SectionHeaderReveal label="Bio & Vision" title={aboutData.bioTitle} className="mb-12" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20">
           
-          {/* Main Biography Text */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-7 space-y-6 text-base sm:text-lg text-[#C9C7C1] font-sans leading-relaxed"
-          >
-            <h2 className="font-serif italic text-3xl sm:text-5xl text-white leading-tight mb-8">
-              {aboutData.bioTitle}
-            </h2>
+          {/* Main Biography Text & StackImage */}
+          <div className="lg:col-span-7 space-y-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6 text-base sm:text-lg text-[#C9C7C1] font-sans leading-relaxed"
+            >
+              <p>{aboutData.bioParagraph1}</p>
+              <p>{aboutData.bioParagraph2}</p>
+              <p>{aboutData.bioParagraph3}</p>
+            </motion.div>
 
-            <p>{aboutData.bioParagraph1}</p>
-            <p>{aboutData.bioParagraph2}</p>
-            <p>{aboutData.bioParagraph3}</p>
-          </motion.div>
+            {/* Stacked Images of Vincenzo & On Set Moments */}
+            <div className="pt-4">
+              <StackImage
+                images={[
+                  {
+                    src: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=85',
+                    alt: 'Filmmaking on location',
+                    badgeLabel: 'On Set',
+                  },
+                  {
+                    src: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=1200&q=85',
+                    alt: 'Production detail',
+                    badgeLabel: 'Framing',
+                  },
+                  {
+                    src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=85',
+                    alt: 'Vincenzo Gulluscio',
+                    badgeLabel: 'Portrait',
+                  },
+                ]}
+                preset="casual"
+                align="left"
+                aspectRatio="aspect-[16/10]"
+              />
+            </div>
+          </div>
 
           {/* Guiding Questions Card */}
           <motion.div
@@ -352,6 +379,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
           </motion.div>
 
         </div>
+
 
         {/* Services / What I Do Grid */}
         <div className="pt-12 border-t border-[#28282D]/40">

@@ -3,6 +3,7 @@ import { LabArticle, RoutePath } from '../types';
 import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
 import { ArticleModal } from './ArticleModal';
+import { SectionHeaderReveal, ScrollReveal } from './motion/ScrollReveal';
 import { ArrowUpRight, Clock } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getLocalizedLabArticle } from '../utils/i18nHelpers';

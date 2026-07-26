@@ -131,8 +131,10 @@ export const OverlappingTabletopCollage: React.FC<OverlappingTabletopCollageProp
                 <img
                   src={item.image}
                   alt={item.title}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 will-change-transform"
                 />
 
                 {/* Hover Info Overlay */}

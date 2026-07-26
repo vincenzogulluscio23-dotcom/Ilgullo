@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Project, RoutePath } from '../types';
 import { SectionLabel } from './EditorialText';
 import { Button } from './Button';
+import { ScrollReveal, ImageScrollReveal } from './motion/ScrollReveal';
 import { ArrowLeft, Play, Pause, Volume2, VolumeX, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getLocalizedProject } from '../utils/i18nHelpers';
@@ -121,49 +122,57 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
         <div className="space-y-16 max-w-4xl mx-auto mb-20">
           
           {/* Context */}
-          <div className="border-l-2 border-[#FF5A36] pl-6 py-1">
-            <SectionLabel label="The Context" className="mb-2" />
-            <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
-              {isEn ? 'What needed to be told' : 'Cosa doveva essere raccontato'}
-            </h3>
-            <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
-              {project.context}
-            </p>
-          </div>
+          <ScrollReveal direction="up" delay={0.05}>
+            <div className="border-l-2 border-[#FF5A36] pl-6 py-1">
+              <SectionLabel label="The Context" className="mb-2" />
+              <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
+                {isEn ? 'What needed to be told' : 'Cosa doveva essere raccontato'}
+              </h3>
+              <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
+                {project.context}
+              </p>
+            </div>
+          </ScrollReveal>
 
           {/* Point of View */}
-          <div className="border-l-2 border-[#28282D] pl-6 py-1">
-            <SectionLabel label="The Point of View" className="mb-2" />
-            <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
-              {isEn ? 'The narrative & visual direction' : 'La scelta narrativa e visiva'}
-            </h3>
-            <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
-              {project.pointOfView}
-            </p>
-          </div>
+          <ScrollReveal direction="up" delay={0.1}>
+            <div className="border-l-2 border-[#28282D] pl-6 py-1">
+              <SectionLabel label="The Point of View" className="mb-2" />
+              <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
+                {isEn ? 'The narrative & visual direction' : 'La scelta narrativa e visiva'}
+              </h3>
+              <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
+                {project.pointOfView}
+              </p>
+            </div>
+          </ScrollReveal>
 
           {/* Process */}
-          <div className="border-l-2 border-[#28282D] pl-6 py-1">
-            <SectionLabel label="The Process" className="mb-2" />
-            <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
-              {isEn ? 'How the work was crafted' : 'Come è stato costruito il lavoro'}
-            </h3>
-            <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
-              {project.process}
-            </p>
-          </div>
+          <ScrollReveal direction="up" delay={0.15}>
+            <div className="border-l-2 border-[#28282D] pl-6 py-1">
+              <SectionLabel label="The Process" className="mb-2" />
+              <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
+                {isEn ? 'How the work was crafted' : 'Come è stato costruito il lavoro'}
+              </h3>
+              <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
+                {project.process}
+              </p>
+            </div>
+          </ScrollReveal>
 
           {/* Outcome */}
           {project.outcome && (
-            <div className="border-l-2 border-[#28282D] pl-6 py-1">
-              <SectionLabel label="The Outcome" className="mb-2" />
-              <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
-                {isEn ? 'The narrative impact' : 'L’impatto del racconto'}
-              </h3>
-              <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
-                {project.outcome}
-              </p>
-            </div>
+            <ScrollReveal direction="up" delay={0.2}>
+              <div className="border-l-2 border-[#28282D] pl-6 py-1">
+                <SectionLabel label="The Outcome" className="mb-2" />
+                <h3 className="font-serif italic text-2xl sm:text-3xl text-white mb-3">
+                  {isEn ? 'The narrative impact' : 'L’impatto del racconto'}
+                </h3>
+                <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed text-pretty">
+                  {project.outcome}
+                </p>
+              </div>
+            </ScrollReveal>
           )}
 
         </div>
@@ -174,14 +183,13 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
             <SectionLabel label="Gallery & Frames" className="mb-6" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {project.galleryImages.map((imgUrl, idx) => (
-                <div key={idx} className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#121214] border border-[#28282D]">
-                  <img
-                    src={imgUrl}
-                    alt={`${project.title} frame ${idx + 1}`}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
+                <ImageScrollReveal
+                  key={idx}
+                  src={imgUrl}
+                  alt={`${project.title} frame ${idx + 1}`}
+                  aspectRatio="aspect-[4/3]"
+                  parallaxStrength={5}
+                />
               ))}
             </div>
           </div>

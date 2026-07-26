@@ -14,6 +14,8 @@ import {
   saveSiteContentToStorage,
   saveMediaAssetsToStorage,
   resetAllCMSToDefaults,
+  fetchServerCMSData,
+  syncServerCMSData,
 } from '../lib/cmsStorage';
 
 interface CMSContextType {
@@ -68,25 +70,43 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [siteContent, setSiteContent] = useState<SiteContent>(getInitialSiteContent());
   const [mediaAssets, setMediaAssets] = useState<MediaAsset[]>(getInitialMediaAssets());
 
-  // Save changes to storage whenever state updates
+  // Load server CMS data on initial mount if available
+  useEffect(() => {
+    fetchServerCMSData().then((serverData) => {
+      if (serverData) {
+        if (serverData.projects) setProjects(serverData.projects);
+        if (serverData.frames) setFrames(serverData.frames);
+        if (serverData.articles) setArticles(serverData.articles);
+        if (serverData.siteContent) setSiteContent(serverData.siteContent);
+        if (serverData.mediaAssets) setMediaAssets(serverData.mediaAssets);
+      }
+    });
+  }, []);
+
+  // Save changes to local storage & server sync whenever state updates
   useEffect(() => {
     saveProjectsToStorage(projects);
+    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
   }, [projects]);
 
   useEffect(() => {
     saveFramesToStorage(frames);
+    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
   }, [frames]);
 
   useEffect(() => {
     saveArticlesToStorage(articles);
+    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
   }, [articles]);
 
   useEffect(() => {
     saveSiteContentToStorage(siteContent);
+    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
   }, [siteContent]);
 
   useEffect(() => {
     saveMediaAssetsToStorage(mediaAssets);
+    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
   }, [mediaAssets]);
 
   const login = (password: string): boolean => {

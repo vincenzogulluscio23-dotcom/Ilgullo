@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RoutePath } from './types';
 import { CMSProvider, useCMS } from './context/CMSContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { PageTransition, LanguageCrossFade } from './components/motion/PageTransition';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -29,6 +30,7 @@ function MainAppContent() {
   const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(null);
 
   const { projects, frames, articles } = useCMS();
+  const { language } = useLanguage();
 
   // Check URL path, query parameters, or hash on load for external CMS link access (/superman)
   React.useEffect(() => {
@@ -101,86 +103,90 @@ function MainAppContent() {
         onNavigate={handleNavigate}
       />
 
-      {/* Main View Router */}
-      <main className="flex-grow">
-        {currentRoute === 'home' && (
-          <>
-            <Hero onNavigate={handleNavigate} />
-            <HomeManifesto onNavigate={handleNavigate} />
-            <FeaturedProjectsCarousel
-              projects={projects}
-              onSelectProject={handleSelectProject}
-              onNavigate={handleNavigate}
-            />
-            <BeyondProcessSection />
-            <WhatMattersSection />
-            <FramesSection
-              frames={frames}
-              onNavigate={handleNavigate}
-              isTeaser
-            />
-            <LabSection
-              articles={articles}
-              onNavigate={handleNavigate}
-              isTeaser
-            />
-            <ContactCTA onNavigate={handleNavigate} />
-          </>
-        )}
+      {/* Main View Router wrapped in Framer Motion Page & Language Transitions */}
+      <main className="flex-grow flex flex-col">
+        <PageTransition routeKey={currentRoute}>
+          <LanguageCrossFade langKey={language}>
+            {currentRoute === 'home' && (
+              <>
+                <Hero onNavigate={handleNavigate} />
+                <HomeManifesto onNavigate={handleNavigate} />
+                <FeaturedProjectsCarousel
+                  projects={projects}
+                  onSelectProject={handleSelectProject}
+                  onNavigate={handleNavigate}
+                />
+                <BeyondProcessSection />
+                <WhatMattersSection />
+                <FramesSection
+                  frames={frames}
+                  onNavigate={handleNavigate}
+                  isTeaser
+                />
+                <LabSection
+                  articles={articles}
+                  onNavigate={handleNavigate}
+                  isTeaser
+                />
+                <ContactCTA onNavigate={handleNavigate} />
+              </>
+            )}
 
-        {currentRoute === 'projects' && (
-          <ProjectsView
-            projects={projects}
-            onSelectProject={handleSelectProject}
-            onNavigate={handleNavigate}
-          />
-        )}
+            {currentRoute === 'projects' && (
+              <ProjectsView
+                projects={projects}
+                onSelectProject={handleSelectProject}
+                onNavigate={handleNavigate}
+              />
+            )}
 
-        {currentRoute === 'project-detail' && activeProject && (
-          <ProjectDetailView
-            project={activeProject}
-            allProjects={projects}
-            onSelectProject={handleSelectProject}
-            onNavigate={handleNavigate}
-          />
-        )}
+            {currentRoute === 'project-detail' && activeProject && (
+              <ProjectDetailView
+                project={activeProject}
+                allProjects={projects}
+                onSelectProject={handleSelectProject}
+                onNavigate={handleNavigate}
+              />
+            )}
 
-        {currentRoute === 'lab' && (
-          <div className="pt-28">
-            <LabSection
-              articles={articles}
-              onNavigate={handleNavigate}
-            />
-          </div>
-        )}
+            {currentRoute === 'lab' && (
+              <div className="pt-28">
+                <LabSection
+                  articles={articles}
+                  onNavigate={handleNavigate}
+                />
+              </div>
+            )}
 
-        {currentRoute === 'frames' && (
-          <div className="pt-28">
-            <FramesSection
-              frames={frames}
-              onNavigate={handleNavigate}
-            />
-          </div>
-        )}
+            {currentRoute === 'frames' && (
+              <div className="pt-28">
+                <FramesSection
+                  frames={frames}
+                  onNavigate={handleNavigate}
+                />
+              </div>
+            )}
 
-        {currentRoute === 'about' && (
-          <AboutView
-            onNavigate={handleNavigate}
-            onSelectProject={handleSelectProject}
-          />
-        )}
+            {currentRoute === 'about' && (
+              <AboutView
+                onNavigate={handleNavigate}
+                onSelectProject={handleSelectProject}
+              />
+            )}
 
-        {currentRoute === 'contact' && (
-          <ContactView />
-        )}
+            {currentRoute === 'contact' && (
+              <ContactView />
+            )}
 
-        {currentRoute === 'privacy' && (
-          <PrivacyView onNavigate={handleNavigate} />
-        )}
+            {currentRoute === 'privacy' && (
+              <PrivacyView onNavigate={handleNavigate} />
+            )}
 
-        {!['home', 'projects', 'project-detail', 'lab', 'frames', 'about', 'contact', 'privacy', 'cms'].includes(currentRoute) && (
-          <NotFoundView onNavigate={handleNavigate} />
-        )}
+            {!['home', 'projects', 'project-detail', 'lab', 'frames', 'about', 'contact', 'privacy', 'cms'].includes(currentRoute) && (
+              <NotFoundView onNavigate={handleNavigate} />
+            )}
+          </LanguageCrossFade>
+        </PageTransition>
       </main>
 
       {/* Global Shell Footer */}
@@ -189,6 +195,7 @@ function MainAppContent() {
     </div>
   );
 }
+
 
 export function App() {
   return (

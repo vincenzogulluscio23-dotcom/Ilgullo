@@ -151,6 +151,8 @@ export const BeyondProcessSection: React.FC = () => {
                 <img
                   src={currentLayer.image}
                   alt={currentLayer.title}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
