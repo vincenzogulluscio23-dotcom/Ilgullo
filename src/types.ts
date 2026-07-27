@@ -199,6 +199,8 @@ export interface LabArticle {
   date: string;
   readingTime: string;
   coverImage: string;
+  heroVideoUrl?: string;
+  images?: string[];
   relatedProjectsSlugs?: string[];
   seo?: SEOData;
   en?: {
@@ -252,14 +254,31 @@ export interface ContactFormData {
 }
 
 export interface SiteContent {
+  brand?: {
+    logoUrl?: string;
+    logoDarkUrl?: string;
+    logoLightUrl?: string;
+    faviconUrl?: string;
+    title?: string;
+    tagline?: string;
+  };
+  customLogoUrl?: string;
+  faviconUrl?: string;
+  brands?: Array<{ name: string; logoUrl?: string }>;
+  aboutHeroMediaUrl?: string;
+  aboutHeroMediaType?: 'image' | 'video';
   hero: {
     headline: string;
     subtitle: string;
+    subhead?: string;
     bgImage: string;
     availableBadge: string;
     reelLabel: string;
+    videoUrl?: string;
   };
   manifesto: {
+    title?: string;
+    text?: string;
     mainStatement: string;
     subParagraph: string;
   };
@@ -274,6 +293,17 @@ export interface SiteContent {
     instagramUrl: string;
     vimeoUrl: string;
     linkedinUrl: string;
+  };
+  contact?: {
+    email: string;
+    phone: string;
+    whatsapp?: string;
+    location: string;
+    social: Array<{ platform: string; url: string; handle: string }>;
+    socialLinks?: any;
+  };
+  footer?: {
+    copyright: string;
   };
   seo?: SEOData;
   en?: {

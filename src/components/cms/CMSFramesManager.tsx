@@ -16,8 +16,10 @@ import {
   Sparkles,
   CheckCircle,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { detectImageOrientation } from '../../lib/cmsStorage';
+import { processAndUploadMedia } from '../../lib/uploadService';
 
 interface BulkUploadItem {
   id: string;
@@ -168,30 +170,32 @@ export const CMSFramesManager: React.FC = () => {
     setBulkItems((prev) => [...prev, ...newItems]);
   };
 
-  // Convert files to Data URL & add frames in batch
+  const [isBatchProcessing, setIsBatchProcessing] = useState(false);
+  const [batchStatus, setBatchStatus] = useState<string | null>(null);
+
+  // Convert files and upload in batch safely
   const handleConfirmBulkUpload = async () => {
     if (bulkItems.length === 0) return;
+    setIsBatchProcessing(true);
 
     for (let i = 0; i < bulkItems.length; i++) {
       const item = bulkItems[i];
+      setBatchStatus(`Elaborazione e salvataggio frame (${i + 1}/${bulkItems.length}): ${item.title}`);
       let imageUrl = item.previewUrl;
+      let orientation = item.orientation || 'horizontal';
 
       if (item.file) {
-        // Convert to Base64 Data URL for persistent storage without remote server setup
         try {
-          imageUrl = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = reject;
-            reader.readAsDataURL(item.file!);
-          });
+          const res = await processAndUploadMedia(item.file);
+          imageUrl = res.url;
+          orientation = res.orientation;
         } catch (e) {
-          console.error('File read error:', e);
+          console.error('Batch upload error:', e);
         }
       }
 
       const newFrame: FrameItem = {
-        id: `frame-${Date.now()}-${i}`,
+        id: `frame-${Date.now()}-${i}-${Math.random().toString(36).substring(2, 5)}`,
         number: `${frames.length + i + 1}`.padStart(2, '0'),
         image: imageUrl,
         title: item.title || `Frame ${frames.length + i + 1}`,
@@ -199,7 +203,7 @@ export const CMSFramesManager: React.FC = () => {
         location: item.location || bulkSharedLocation,
         date: item.date || bulkSharedDate,
         aspectRatio: '16:9',
-        orientation: item.orientation || 'horizontal',
+        orientation: (orientation === 'panoramic' ? 'horizontal' : orientation) as 'horizontal' | 'vertical' | 'square',
         projectId: bulkSharedProjectId || undefined,
         altText: item.altText,
       };
@@ -207,6 +211,8 @@ export const CMSFramesManager: React.FC = () => {
       addFrame(newFrame);
     }
 
+    setIsBatchProcessing(false);
+    setBatchStatus(null);
     setIsBulkUploadOpen(false);
     setBulkItems([]);
   };
@@ -451,7 +457,7 @@ export const CMSFramesManager: React.FC = () => {
               <input
                 type="file"
                 multiple
-                accept="image/*"
+                accept="image/*,video/*"
                 onChange={(e) => handleFilesSelected(e.target.files)}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
@@ -639,7 +645,8 @@ export const CMSFramesManager: React.FC = () => {
                     const url = e.target.value;
                     const img = new Image();
                     img.onload = () => {
-                      const orientation = detectImageOrientation(img.width, img.height);
+                      const detected = detectImageOrientation(img.width, img.height);
+                      const orientation = (detected === 'panoramic' ? 'horizontal' : detected) as 'horizontal' | 'vertical' | 'square';
                       setEditingFrame({ ...editingFrame, image: url, orientation });
                     };
                     img.src = url;
@@ -664,7 +671,7 @@ export const CMSFramesManager: React.FC = () => {
                   <label className="block text-xs font-mono text-[#C9C7C1] mb-1">Categoria</label>
                   <select
                     value={editingFrame.category || 'Places'}
-                    onChange={(e) => setEditingFrame({ ...editingFrame, category: e.target.value })}
+                    onChange={(e) => setEditingFrame({ ...editingFrame, category: e.target.value as FrameCategory })}
                     className="w-full bg-[#09090A] border border-[#28282D] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF5A36]"
                   >
                     {categories.filter((c) => c !== 'All').map((c) => (
@@ -691,7 +698,7 @@ export const CMSFramesManager: React.FC = () => {
                   <select
                     value={editingFrame.orientation || 'horizontal'}
                     onChange={(e) =>
-                      setEditingFrame({ ...editingFrame, orientation: e.target.value as ImageOrientation })
+                      setEditingFrame({ ...editingFrame, orientation: (e.target.value === 'panoramic' ? 'horizontal' : e.target.value) as 'horizontal' | 'vertical' | 'square' })
                     }
                     className="w-full bg-[#09090A] border border-[#28282D] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF5A36]"
                   >

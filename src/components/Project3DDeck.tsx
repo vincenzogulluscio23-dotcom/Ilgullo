@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Project } from '../types';
 import { ArrowUpRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { UniversalMedia } from './UniversalMedia';
 
 interface Project3DDeckProps {
   projects: Project[];
@@ -36,11 +37,25 @@ export const Project3DDeck: React.FC<Project3DDeckProps> = ({
     return diff;
   };
 
+  const handleDragEnd = (_: any, info: { offset: { x: number } }) => {
+    if (info.offset.x < -40) {
+      handleNext();
+    } else if (info.offset.x > 40) {
+      handlePrev();
+    }
+  };
+
   return (
-    <div className="relative w-full max-w-6xl mx-auto py-8">
+    <div className="relative w-full max-w-6xl mx-auto py-8 select-none">
       
-      {/* 3D Perspective Stage Container */}
-      <div className="relative w-full min-h-[460px] sm:min-h-[520px] md:min-h-[560px] flex items-center justify-center perspective-[1200px] overflow-visible">
+      {/* 3D Perspective Stage Container with Mouse/Touch Drag Support */}
+      <motion.div
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={handleDragEnd}
+        className="relative w-full min-h-[460px] sm:min-h-[520px] md:min-h-[560px] flex items-center justify-center perspective-[1200px] overflow-visible cursor-grab active:cursor-grabbing"
+      >
         
         {projects.map((project, index) => {
           const offset = getOffset(index);
@@ -133,12 +148,9 @@ export const Project3DDeck: React.FC<Project3DDeckProps> = ({
             >
               {/* Media Image */}
               <div className="relative w-full h-full bg-[#121214]">
-                <img
-                  src={project.coverImage}
+                <UniversalMedia
+                  src={project.heroVideoUrl || project.coverImage}
                   alt={project.title}
-                  loading="lazy"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover select-none pointer-events-none will-change-transform"
                 />
 
@@ -167,7 +179,7 @@ export const Project3DDeck: React.FC<Project3DDeckProps> = ({
           );
         })}
 
-      </div>
+      </motion.div>
 
       {/* Center Active Project Editorial Card Details */}
       <AnimatePresence mode="wait">

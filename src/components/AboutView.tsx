@@ -97,22 +97,24 @@ export const AboutView: React.FC<AboutViewProps> = ({
       ? harvestedFrames
       : combinedPool;
 
-  const clients = [
-    'Riva Yacht',
-    'Ca\' del Bosco',
-    'Furla',
-    'Casa Sant\'Orsola',
-    'General Fittings',
-    'ENGIE',
-    'Spezia Calcio',
-    'Sorgenia',
-    'UBI Banca',
-    'Zonin',
-    'Bruno Vanzan',
-    'Kariba',
-    'Forge Fedriga',
-    'Hawe Italia',
-  ];
+  const clients = siteContent.brands && siteContent.brands.length > 0
+    ? siteContent.brands
+    : [
+        { name: 'Riva Yacht' },
+        { name: "Ca' del Bosco" },
+        { name: 'Furla' },
+        { name: "Casa Sant'Orsola" },
+        { name: 'General Fittings' },
+        { name: 'ENGIE' },
+        { name: 'Spezia Calcio' },
+        { name: 'Sorgenia' },
+        { name: 'UBI Banca' },
+        { name: 'Zonin' },
+        { name: 'Bruno Vanzan' },
+        { name: 'Kariba' },
+        { name: 'Forge Fedriga' },
+        { name: 'Hawe Italia' },
+      ];
 
   const services = isEn ? [
     'Corporate Films & Video',
@@ -179,47 +181,49 @@ export const AboutView: React.FC<AboutViewProps> = ({
   return (
     <div className="pt-20 pb-24 bg-[#09090A] min-h-screen text-[#F1F0EB] relative overflow-hidden">
       
-      {/* 1. HERO SECTION WITH FIERY ATMOSPHERE & FULL-CONTAINER PORTRAIT BACKGROUND */}
-      <section className="relative w-full pt-16 pb-20 px-4 sm:px-6 lg:px-12 bg-[#1A0C08] border-b border-[#28282D]/50 rounded-b-[2.5rem] md:rounded-b-[4rem] overflow-hidden min-h-[550px] md:min-h-[640px] flex flex-col justify-between">
+      {/* 1. HERO SECTION WITH FULL IMPACT CUSTOMIZABLE MEDIA BACKGROUND */}
+      <section className="relative w-full pt-20 pb-28 px-4 sm:px-6 lg:px-12 bg-[#09090A] border-b border-[#28282D]/50 rounded-b-[2.5rem] md:rounded-b-[4rem] overflow-hidden min-h-[70vh] md:min-h-[85vh] flex flex-col justify-end">
         
-        {/* Full Section Background Image with Fiery Color Blend & Gradient Masking */}
+        {/* Full Section Background Media (Video or Image) */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <motion.img
-            initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1.05, opacity: 0.5 }}
-            transition={{ duration: 1.2 }}
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1600&q=85"
-            alt="Vincenzo Gulluscio"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover object-top lg:object-[70%_20%] mix-blend-luminosity"
-          />
+          {siteContent.aboutHeroMediaType === 'video' && siteContent.aboutHeroMediaUrl ? (
+            <iframe
+              src={`${siteContent.aboutHeroMediaUrl}?autoplay=1&muted=1&loop=1&background=1&autopause=0`}
+              title="Vincenzo Gulluscio Hero Reel"
+              className="w-full h-full object-cover scale-125 opacity-60 pointer-events-none"
+              allow="autoplay; fullscreen"
+            />
+          ) : (
+            <motion.img
+              initial={{ scale: 1.08, opacity: 0 }}
+              animate={{ scale: 1, opacity: 0.65 }}
+              transition={{ duration: 1.4 }}
+              src={siteContent.aboutHeroMediaUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1600&q=85"}
+              alt="Vincenzo Gulluscio"
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover object-center"
+            />
+          )}
           
-          {/* Fiery Red/Orange Ambient Lighting Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#E04B28]/70 via-[#E04B28]/30 to-[#09090A]/80 mix-blend-color-dodge" />
-          <div className="absolute inset-0 bg-[#FF5A36]/15 mix-blend-overlay" />
-          
-          {/* Left-to-Right & Bottom-to-Top Dark Gradients for Text Legibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#09090A] via-[#09090A]/80 to-transparent lg:w-3/4" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#09090A] via-transparent to-[#09090A]/50" />
+          {/* Subtle Color & Vignette Gradients for Legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#09090A] via-[#09090A]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#09090A]/80 via-transparent to-[#09090A]/60" />
         </div>
 
         {/* Soft Ambient Light Aura */}
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -top-10 left-1/3 w-[800px] h-[500px] bg-[#FF5A36]/30 rounded-full blur-[200px] pointer-events-none z-0"
+          className="absolute -top-10 left-1/3 w-[800px] h-[500px] bg-[#FF5A36]/20 rounded-full blur-[200px] pointer-events-none z-0"
         />
 
-        <div className="max-w-7xl mx-auto w-full relative z-10 my-auto">
+        <div className="max-w-7xl mx-auto w-full relative z-10">
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-8 mb-12">
-            
-            {/* Left Column: Big Bold Display Typography */}
+          <div className="py-8 mb-8 max-w-4xl">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-8 flex flex-col justify-center"
             >
               <span className="font-mono text-xs text-[#FF5A36] uppercase tracking-widest mb-4 flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5" />
@@ -230,38 +234,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
                 Filmmaker & <br />
                 <span className="font-serif italic font-normal text-[#F1F0EB]">Visual Storyteller</span>
               </h1>
-
-              <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs text-[#C9C7C1]">
-                <div className="flex items-center gap-2 bg-[#09090A]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                  <MapPin className="w-3.5 h-3.5 text-[#FF5A36]" />
-                  <span>Travagliato, Brescia (IT)</span>
-                </div>
-                <div className="flex items-center gap-2 bg-[#09090A]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                  <Globe className="w-3.5 h-3.5 text-[#FF5A36]" />
-                  <span>Propaganda3 & Freelance</span>
-                </div>
-              </div>
             </motion.div>
-
-            {/* Right Column: Floating Manifesto Quote */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-4 lg:pl-4"
-            >
-              <div className="bg-[#09090A]/75 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-3xl p-6 sm:p-8 shadow-2xl">
-                <h2 className="font-serif italic text-xl sm:text-2xl text-white mb-3 leading-snug">
-                  {isEn ? 'The strongest stories stem from what already exists.' : 'Le storie più forti nascono da ciò che c\'è già.'}
-                </h2>
-                <p className="font-sans text-xs sm:text-sm text-[#C9C7C1] leading-relaxed">
-                  {isEn
-                    ? 'From directing to photography, I shape visual narratives that connect people, honor identity, and endure.'
-                    : 'Dalla regia alla fotografia, costruisco racconti visivi che connettono le persone, rispettano l\'identità di chi parla e durano nel tempo.'}
-                </p>
-              </div>
-            </motion.div>
-
           </div>
 
           {/* 4 Pillars Discipline Bar */}
@@ -269,7 +242,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-white/15"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-white/20"
           >
             {disciplines.map((d) => (
               <div key={d.num} className="flex flex-col">
@@ -282,26 +255,42 @@ export const AboutView: React.FC<AboutViewProps> = ({
         </div>
       </section>
 
-      {/* 2. CONTINUOUS SCROLLING CLIENT LOGO MARQUEE (Under Hero) */}
+      {/* 2. CONTINUOUS SCROLLING CLIENT LOGO MARQUEE (Under Hero - up to 25 logos) */}
       <section className="w-full py-8 bg-[#121214] border-b border-[#28282D]/60 overflow-hidden relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-4">
           <span className="font-mono text-[11px] text-[#8D8D89] uppercase tracking-widest block">
-            Trusted by Brands & Agencies I've Helped Shape
+            {isEn ? 'Trusted by Brands & Agencies' : 'Brand e Agenzie con cui ho collaborato'}
           </span>
         </div>
 
         {/* Infinite Ticker Track */}
         <div className="flex overflow-hidden select-none">
           <div className="animate-marquee flex items-center gap-6 sm:gap-10 shrink-0">
-            {[...clients, ...clients].map((client, idx) => (
-              <div
-                key={idx}
-                className="px-5 py-2.5 rounded-full bg-[#09090A] border border-[#28282D] font-mono text-xs sm:text-sm text-[#C9C7C1] hover:text-white hover:border-[#FF5A36] transition-colors whitespace-nowrap flex items-center gap-3"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF5A36]" />
-                <span>{client}</span>
-              </div>
-            ))}
+            {[...clients.slice(0, 25), ...clients.slice(0, 25)].map((client, idx) => {
+              const brandName = typeof client === 'string' ? client : client.name;
+              const logoUrl = typeof client === 'object' ? client.logoUrl : undefined;
+
+              return (
+                <div
+                  key={idx}
+                  className="px-5 py-2.5 rounded-full bg-[#09090A] border border-[#28282D] font-mono text-xs sm:text-sm text-[#C9C7C1] hover:text-white hover:border-[#FF5A36] transition-all whitespace-nowrap flex items-center gap-3 shrink-0"
+                >
+                  {logoUrl ? (
+                    <img
+                      src={logoUrl}
+                      alt={brandName}
+                      loading="lazy"
+                      className="h-5 sm:h-6 w-auto max-w-[120px] object-contain brightness-90 hover:brightness-100 transition-all"
+                    />
+                  ) : (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF5A36]" />
+                      <span>{brandName}</span>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -528,7 +517,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
                     onNavigate('frames');
                   }}
                 >
-                  Tutti i frames
+                  {isEn ? 'All frames' : 'Tutti i frames'}
                 </Button>
               </div>
             </motion.div>

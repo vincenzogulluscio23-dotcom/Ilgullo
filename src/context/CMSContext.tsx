@@ -8,15 +8,9 @@ import {
   getInitialMediaAssets,
   getAdminPassword,
   setAdminPasswordInStorage,
-  saveProjectsToStorage,
-  saveFramesToStorage,
-  saveArticlesToStorage,
-  saveSiteContentToStorage,
-  saveMediaAssetsToStorage,
-  resetAllCMSToDefaults,
-  fetchServerCMSData,
-  syncServerCMSData,
 } from '../lib/cmsStorage';
+import { fetchAllSanityData } from '../lib/sanityQueries';
+import { updateDynamicFavicon } from '../utils/dynamicFavicon';
 
 interface CMSContextType {
   isLoggedIn: boolean;
@@ -51,9 +45,10 @@ interface CMSContextType {
   addMediaAsset: (asset: Omit<MediaAsset, 'id' | 'uploadedAt'>) => MediaAsset;
   deleteMediaAsset: (id: string) => void;
 
-  resetToDefaults: () => void;
   exportCMSData: () => string;
   importCMSData: (jsonString: string) => boolean;
+  isLoadingSanity: boolean;
+  refreshSanityData: () => Promise<void>;
 }
 
 const CMSContext = createContext<CMSContextType | undefined>(undefined);
@@ -69,45 +64,45 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [articles, setArticles] = useState<LabArticle[]>(getInitialArticles());
   const [siteContent, setSiteContent] = useState<SiteContent>(getInitialSiteContent());
   const [mediaAssets, setMediaAssets] = useState<MediaAsset[]>(getInitialMediaAssets());
+  const [isLoadingSanity, setIsLoadingSanity] = useState<boolean>(true);
 
-  // Load server CMS data on initial mount if available
-  useEffect(() => {
-    fetchServerCMSData().then((serverData) => {
-      if (serverData) {
-        if (serverData.projects) setProjects(serverData.projects);
-        if (serverData.frames) setFrames(serverData.frames);
-        if (serverData.articles) setArticles(serverData.articles);
-        if (serverData.siteContent) setSiteContent(serverData.siteContent);
-        if (serverData.mediaAssets) setMediaAssets(serverData.mediaAssets);
+  const loadSanity = async () => {
+    setIsLoadingSanity(true);
+    try {
+      const sanityData = await fetchAllSanityData();
+      if (sanityData) {
+        if (sanityData.projects && sanityData.projects.length > 0) {
+          setProjects(sanityData.projects);
+        }
+        if (sanityData.frames && sanityData.frames.length > 0) {
+          setFrames(sanityData.frames);
+        }
+        if (sanityData.articles && sanityData.articles.length > 0) {
+          setArticles(sanityData.articles);
+        }
+        if (sanityData.siteContent) {
+          setSiteContent(sanityData.siteContent);
+          if (sanityData.siteContent.brand?.faviconUrl) {
+            updateDynamicFavicon(sanityData.siteContent.brand.faviconUrl);
+          }
+        }
       }
-    });
+    } catch (e) {
+      console.warn('Sanity load warning:', e);
+    } finally {
+      setIsLoadingSanity(false);
+    }
+  };
+
+  useEffect(() => {
+    loadSanity();
   }, []);
 
-  // Save changes to local storage & server sync whenever state updates
   useEffect(() => {
-    saveProjectsToStorage(projects);
-    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
-  }, [projects]);
-
-  useEffect(() => {
-    saveFramesToStorage(frames);
-    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
-  }, [frames]);
-
-  useEffect(() => {
-    saveArticlesToStorage(articles);
-    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
-  }, [articles]);
-
-  useEffect(() => {
-    saveSiteContentToStorage(siteContent);
-    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
-  }, [siteContent]);
-
-  useEffect(() => {
-    saveMediaAssetsToStorage(mediaAssets);
-    syncServerCMSData({ projects, frames, articles, siteContent, mediaAssets });
-  }, [mediaAssets]);
+    if (siteContent.brand?.faviconUrl) {
+      updateDynamicFavicon(siteContent.brand.faviconUrl);
+    }
+  }, [siteContent.brand?.faviconUrl]);
 
   const login = (password: string): boolean => {
     if (password === adminPassword || password === 'gullo2026') {
@@ -131,14 +126,6 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Projects CRUD
   const addProject = (newProj: Project) => {
     setProjects((prev) => [newProj, ...prev]);
-    // Also auto-add cover to media library if not present
-    if (newProj.coverImage) {
-      addMediaAsset({
-        url: newProj.coverImage,
-        name: `${newProj.title} - Cover`,
-        category: 'projects',
-      });
-    }
   };
 
   const updateProject = (id: string, updated: Partial<Project>) => {
@@ -154,13 +141,6 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Frames CRUD
   const addFrame = (newFrame: FrameItem) => {
     setFrames((prev) => [newFrame, ...prev]);
-    if (newFrame.image) {
-      addMediaAsset({
-        url: newFrame.image,
-        name: newFrame.title || `Frame ${newFrame.number}`,
-        category: 'frames',
-      });
-    }
   };
 
   const updateFrame = (id: string, updated: Partial<FrameItem>) => {
@@ -206,15 +186,6 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deleteMediaAsset = (id: string) => {
     setMediaAssets((prev) => prev.filter((m) => m.id !== id));
-  };
-
-  const resetToDefaults = () => {
-    resetAllCMSToDefaults();
-    setProjects(getInitialProjects());
-    setFrames(getInitialFrames());
-    setArticles(getInitialArticles());
-    setSiteContent(getInitialSiteContent());
-    setMediaAssets(getInitialMediaAssets());
   };
 
   const exportCMSData = (): string => {
@@ -274,9 +245,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         mediaAssets,
         addMediaAsset,
         deleteMediaAsset,
-        resetToDefaults,
         exportCMSData,
         importCMSData,
+        isLoadingSanity,
+        refreshSanityData: loadSanity,
       }}
     >
       {children}

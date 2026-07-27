@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { RoutePath } from '../types';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { useCMS } from '../context/CMSContext';
 
 interface HeaderProps {
   currentRoute: RoutePath;
   onNavigate: (route: RoutePath) => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
+export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate, theme = 'dark', onToggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t } = useLanguage();
+  const { siteContent } = useCMS();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,12 +33,16 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
   }, []);
 
   const navItems: { label: string; route: RoutePath }[] = [
-    { label: t.nav.projects.toUpperCase(), route: 'projects' },
-    { label: t.nav.lab.toUpperCase(), route: 'lab' },
-    { label: t.nav.frames.toUpperCase(), route: 'frames' },
     { label: t.nav.about.toUpperCase(), route: 'about' },
+    { label: t.nav.projects.toUpperCase(), route: 'projects' },
+    { label: t.nav.frames.toUpperCase(), route: 'frames' },
+    { label: t.nav.lab.toUpperCase(), route: 'lab' },
     { label: t.nav.contact.toUpperCase(), route: 'contact' },
   ];
+
+  if (currentRoute !== 'home') {
+    navItems.unshift({ label: 'HOME', route: 'home' });
+  }
 
   const handleNavClick = (route: RoutePath) => {
     onNavigate(route);
@@ -58,12 +66,20 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleNavClick('home')}
-            className="group text-left focus:outline-none flex items-baseline gap-3"
+            className="group text-left focus:outline-none flex items-center gap-3"
             aria-label="Gullo Home"
           >
-            <span className="font-serif italic text-2xl md:text-3xl font-normal text-white group-hover:text-[#FF5A36] transition-colors duration-300">
-              Gullo
-            </span>
+            {siteContent.customLogoUrl ? (
+              <img
+                src={siteContent.customLogoUrl}
+                alt="Logo"
+                className="h-7 md:h-8 w-auto object-contain"
+              />
+            ) : (
+              <span className="font-serif italic text-2xl md:text-3xl font-normal text-white group-hover:text-[#FF5A36] transition-colors duration-300">
+                Gullo
+              </span>
+            )}
             <span className="hidden sm:inline-block font-mono text-[10px] uppercase tracking-widest text-[#8D8D89] group-hover:text-[#C9C7C1] transition-colors">
               Filmmaker & Storyteller
             </span>
@@ -99,36 +115,39 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-4 font-mono text-xs text-[#8D8D89]">
             <LanguageSwitcher />
-            <span className="text-[#28282D]">•</span>
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              href="https://www.instagram.com/humera.vision/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-300 flex items-center gap-1"
-            >
-              <span>IG</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </motion.a>
-            <span className="text-[#28282D]">•</span>
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              href="mailto:vincenzo@ilgullo.com"
-              className="hover:text-[#FF5A36] transition-colors duration-300 text-xs"
-            >
-              vincenzo@ilgullo.com
-            </motion.a>
+
+            {/* Light / Dark Mode Toggle */}
+            {onToggleTheme && (
+              <button
+                onClick={onToggleTheme}
+                className="p-2 rounded-full border border-[#28282D] text-[#C9C7C1] hover:text-white hover:border-[#FF5A36] transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center bg-[#121214]"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-300" />}
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Toggle Button */}
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center justify-center min-w-[44px] min-h-[44px] px-3 py-2 rounded-full border border-[#28282D] bg-[#121214]/80 text-[#F1F0EB] hover:border-[#FF5A36] transition-colors duration-300 shadow-md"
-            aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-[#FF5A36]" /> : <Menu className="w-5 h-5" />}
-          </motion.button>
+          <div className="flex items-center gap-2 md:hidden">
+            {onToggleTheme && (
+              <button
+                onClick={onToggleTheme}
+                className="p-2 rounded-full border border-[#28282D] text-[#C9C7C1] hover:text-white min-w-[40px] min-h-[40px] flex items-center justify-center bg-[#121214]"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-300" />}
+              </button>
+            )}
+
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="flex items-center justify-center min-w-[44px] min-h-[44px] px-3 py-2 rounded-full border border-[#28282D] bg-[#121214]/80 text-[#F1F0EB] hover:border-[#FF5A36] transition-colors duration-300 shadow-md"
+              aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5 text-[#FF5A36]" /> : <Menu className="w-5 h-5" />}
+            </motion.button>
+          </div>
         </div>
       </header>
 

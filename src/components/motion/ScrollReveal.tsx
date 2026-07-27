@@ -7,6 +7,7 @@ import {
   MotionValue,
 } from 'motion/react';
 import { motionDuration, motionEase } from '../../motion/motionConfig';
+import { isVideoUrl } from '../UniversalMedia';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -131,17 +132,30 @@ export const ImageScrollReveal: React.FC<{
   );
   const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.06, 1, 1.03]);
 
-  if (shouldReduceMotion) {
+  const isVideo = isVideoUrl(src);
+
+  if (shouldReduceMotion || isVideo) {
     return (
       <div className={`overflow-hidden rounded-2xl border border-[#28282D] ${aspectRatio} ${className}`}>
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          referrerPolicy="no-referrer"
-          className="w-full h-full object-cover"
-        />
+        {isVideo ? (
+          <video
+            src={src}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover"
+          />
+        )}
       </div>
     );
   }

@@ -6,8 +6,10 @@ import { CMSProjectsManager } from './CMSProjectsManager';
 import { CMSFramesManager } from './CMSFramesManager';
 import { CMSMediaLibrary } from './CMSMediaLibrary';
 import { CMSSitePagesManager } from './CMSSitePagesManager';
+import { CMSContactMessages } from './CMSContactMessages';
 import { CMSLivePreviewModal } from './CMSLivePreviewModal';
 import { CMSLogin } from './CMSLogin';
+import { CMSErrorBoundary } from './CMSErrorBoundary';
 import {
   LayoutDashboard,
   Home,
@@ -26,6 +28,7 @@ import {
   ShieldAlert,
   Settings,
   ArrowLeft,
+  Mail,
 } from 'lucide-react';
 
 import { RoutePath } from '../../types';
@@ -46,7 +49,7 @@ export const CMSMainView: React.FC<CMSMainViewProps> = ({ onExitCMS, onNavigate 
 
   const { isLoggedIn, logout, setAdminPassword, adminPassword } = useCMS();
   const [activeTab, setActiveTab] = useState<
-    'dashboard' | 'homepage' | 'projects' | 'frames' | 'lab' | 'pages' | 'media' | 'settings'
+    'dashboard' | 'homepage' | 'projects' | 'frames' | 'lab' | 'pages' | 'messages' | 'media' | 'settings'
   >('dashboard');
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -201,6 +204,18 @@ export const CMSMainView: React.FC<CMSMainViewProps> = ({ onExitCMS, onNavigate 
               </button>
 
               <button
+                onClick={() => setActiveTab('messages')}
+                className={`w-full px-3.5 py-2.5 rounded-xl text-left flex items-center gap-3 transition-colors ${
+                  activeTab === 'messages'
+                    ? 'bg-[#FF5A36] text-white font-medium shadow-md'
+                    : 'text-[#8D8D89] hover:text-white hover:bg-[#09090A]'
+                }`}
+              >
+                <Mail className="w-4 h-4" />
+                <span>Messaggi Ricevuti</span>
+              </button>
+
+              <button
                 onClick={() => setActiveTab('media')}
                 className={`w-full px-3.5 py-2.5 rounded-xl text-left flex items-center gap-3 transition-colors ${
                   activeTab === 'media'
@@ -249,80 +264,82 @@ export const CMSMainView: React.FC<CMSMainViewProps> = ({ onExitCMS, onNavigate 
 
         {/* Main Content Area */}
         <main className="flex-grow p-6 sm:p-10 max-w-7xl mx-auto w-full space-y-8 overflow-x-hidden">
-          
-          {activeTab === 'dashboard' && (
-            <CMSDashboard
-              onNavigateTab={(tab) => setActiveTab(tab as any)}
-              onOpenLivePreview={() => setIsPreviewOpen(true)}
-            />
-          )}
+          <CMSErrorBoundary>
+            {activeTab === 'dashboard' && (
+              <CMSDashboard
+                onNavigateTab={(tab) => setActiveTab(tab as any)}
+                onOpenLivePreview={() => setIsPreviewOpen(true)}
+              />
+            )}
 
-          {activeTab === 'homepage' && <CMSHomepageManager />}
+            {activeTab === 'homepage' && <CMSHomepageManager />}
 
-          {activeTab === 'projects' && <CMSProjectsManager />}
+            {activeTab === 'projects' && <CMSProjectsManager />}
 
-          {activeTab === 'frames' && <CMSFramesManager />}
+            {activeTab === 'frames' && <CMSFramesManager />}
 
-          {activeTab === 'pages' && <CMSSitePagesManager />}
+            {activeTab === 'pages' && <CMSSitePagesManager />}
 
-          {activeTab === 'media' && <CMSMediaLibrary />}
+            {activeTab === 'messages' && <CMSContactMessages />}
 
-          {activeTab === 'settings' && (
-            <div className="max-w-xl space-y-6">
-              <div className="pb-4 border-b border-[#28282D]">
-                <h2 className="font-serif italic text-2xl text-white">Sicurezza & Accesso CMS</h2>
-                <p className="text-xs text-[#8D8D89] font-mono mt-1">
-                  Modifica la password segreta richiesta per accedere al pannello di controllo.
-                </p>
+            {activeTab === 'media' && <CMSMediaLibrary />}
+
+            {activeTab === 'settings' && (
+              <div className="max-w-xl space-y-6">
+                <div className="pb-4 border-b border-[#28282D]">
+                  <h2 className="font-serif italic text-2xl text-white">Sicurezza & Accesso CMS</h2>
+                  <p className="text-xs text-[#8D8D89] font-mono mt-1">
+                    Modifica la password segreta richiesta per accedere al pannello di controllo.
+                  </p>
+                </div>
+
+                <form onSubmit={handlePasswordChange} className="bg-[#121214] border border-[#28282D] p-6 rounded-2xl space-y-4 shadow-lg">
+                  <div>
+                    <label className="block text-xs font-mono text-[#C9C7C1] mb-1">
+                      Password Attuale
+                    </label>
+                    <input
+                      type="text"
+                      disabled
+                      value={adminPassword}
+                      className="w-full bg-[#09090A] border border-[#28282D] rounded-xl px-3.5 py-2.5 text-xs text-[#8D8D89]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-[#C9C7C1] mb-1">
+                      Nuova Password Segreta *
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Digita la nuova password..."
+                      className="w-full bg-[#09090A] border border-[#28282D] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF5A36]"
+                    />
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between">
+                    {passwordSaved && (
+                      <span className="text-xs font-mono text-emerald-400 flex items-center gap-1">
+                        <Check className="w-4 h-4" />
+                        <span>Password aggiornata con successo!</span>
+                      </span>
+                    )}
+
+                    <button
+                      type="submit"
+                      className="py-2.5 px-6 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-white font-mono text-xs font-medium inline-flex items-center gap-2 shadow-lg ml-auto"
+                    >
+                      <Lock className="w-4 h-4" />
+                      <span>Aggiorna Password</span>
+                    </button>
+                  </div>
+                </form>
               </div>
-
-              <form onSubmit={handlePasswordChange} className="bg-[#121214] border border-[#28282D] p-6 rounded-2xl space-y-4 shadow-lg">
-                <div>
-                  <label className="block text-xs font-mono text-[#C9C7C1] mb-1">
-                    Password Attuale
-                  </label>
-                  <input
-                    type="text"
-                    disabled
-                    value={adminPassword}
-                    className="w-full bg-[#09090A] border border-[#28282D] rounded-xl px-3.5 py-2.5 text-xs text-[#8D8D89]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-[#C9C7C1] mb-1">
-                    Nuova Password Segreta *
-                  </label>
-                  <input
-                    type="password"
-                    required
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Digita la nuova password..."
-                    className="w-full bg-[#09090A] border border-[#28282D] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF5A36]"
-                  />
-                </div>
-
-                <div className="pt-2 flex items-center justify-between">
-                  {passwordSaved && (
-                    <span className="text-xs font-mono text-emerald-400 flex items-center gap-1">
-                      <Check className="w-4 h-4" />
-                      <span>Password aggiornata con successo!</span>
-                    </span>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="py-2.5 px-6 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-white font-mono text-xs font-medium inline-flex items-center gap-2 shadow-lg ml-auto"
-                  >
-                    <Lock className="w-4 h-4" />
-                    <span>Aggiorna Password</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-
+            )}
+          </CMSErrorBoundary>
         </main>
       </div>
 

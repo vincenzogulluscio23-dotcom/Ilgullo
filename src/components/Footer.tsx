@@ -98,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   rel="noopener noreferrer"
                   className="text-[#C9C7C1] hover:text-[#FF5A36] transition-colors flex items-center gap-1"
                 >
-                  Instagram (@humera.vision)
+                  Instagram
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
               </li>
@@ -109,7 +109,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   rel="noopener noreferrer"
                   className="text-[#C9C7C1] hover:text-[#FF5A36] transition-colors flex items-center gap-1"
                 >
-                  LinkedIn (Vincenzo Gulluscio)
+                  LinkedIn
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
               </li>
@@ -133,8 +133,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               {language === 'it' ? 'Sede & Disponibilità' : 'Location & Status'}
             </span>
             <p className="text-[#C9C7C1] leading-relaxed mb-2">
-              Travagliato, Brescia — Italy <br />
-              Via Castrezzato 12E
+              Brescia, Italy
             </p>
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#121214] border border-[#28282D] text-[10px] text-[#FF5A36]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF5A36] animate-pulse"></span>

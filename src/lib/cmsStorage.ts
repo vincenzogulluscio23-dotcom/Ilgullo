@@ -417,24 +417,46 @@ export const setAdminPasswordInStorage = (password: string) => {
 };
 
 export const saveProjectsToStorage = (projects: Project[]) => {
-  localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
+  try {
+    localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
+  } catch (e) {
+    console.warn('localStorage quota limit reached while saving projects:', e);
+  }
 };
 
 export const saveFramesToStorage = (frames: FrameItem[]) => {
-  localStorage.setItem(STORAGE_KEYS.FRAMES, JSON.stringify(frames));
+  try {
+    localStorage.setItem(STORAGE_KEYS.FRAMES, JSON.stringify(frames));
+  } catch (e) {
+    console.warn('localStorage quota limit reached while saving frames:', e);
+  }
 };
 
 export const saveArticlesToStorage = (articles: LabArticle[]) => {
-  localStorage.setItem(STORAGE_KEYS.ARTICLES, JSON.stringify(articles));
+  try {
+    localStorage.setItem(STORAGE_KEYS.ARTICLES, JSON.stringify(articles));
+  } catch (e) {
+    console.warn('localStorage quota limit reached while saving articles:', e);
+  }
 };
 
 export const saveSiteContentToStorage = (content: SiteContent) => {
-  localStorage.setItem(STORAGE_KEYS.SITE_CONTENT, JSON.stringify(content));
+  try {
+    localStorage.setItem(STORAGE_KEYS.SITE_CONTENT, JSON.stringify(content));
+  } catch (e) {
+    console.warn('localStorage quota limit reached while saving site content:', e);
+  }
 };
 
 export const saveMediaAssetsToStorage = (media: MediaAsset[]) => {
-  localStorage.setItem(STORAGE_KEYS.MEDIA_ASSETS, JSON.stringify(media));
+  try {
+    localStorage.setItem(STORAGE_KEYS.MEDIA_ASSETS, JSON.stringify(media));
+  } catch (e) {
+    console.warn('localStorage quota limit reached while saving media assets:', e);
+  }
 };
+
+let syncTimer: any = null;
 
 export const syncServerCMSData = async (data: {
   projects?: Project[];
@@ -443,15 +465,19 @@ export const syncServerCMSData = async (data: {
   siteContent?: SiteContent;
   mediaAssets?: MediaAsset[];
 }) => {
-  try {
-    await fetch('/api/cms/data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-  } catch (e) {
-    console.warn('Server sync skipped:', e);
-  }
+  if (syncTimer) clearTimeout(syncTimer);
+
+  syncTimer = setTimeout(async () => {
+    try {
+      await fetch('/api/cms/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (e) {
+      console.warn('Server sync skipped or network unavailable:', e);
+    }
+  }, 400);
 };
 
 export const fetchServerCMSData = async () => {

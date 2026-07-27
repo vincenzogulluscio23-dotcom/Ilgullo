@@ -6,6 +6,7 @@ import { ScrollReveal, ImageScrollReveal } from './motion/ScrollReveal';
 import { ArrowLeft, Play, Pause, Volume2, VolumeX, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getLocalizedProject } from '../utils/i18nHelpers';
+import { UniversalMedia } from './UniversalMedia';
 
 interface ProjectDetailViewProps {
   project: Project;
@@ -68,10 +69,9 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
 
         {/* Main Hero Media / Video Player */}
         <div className="relative aspect-[16/9] rounded-2xl md:rounded-3xl overflow-hidden bg-[#121214] border border-[#28282D] mb-16 shadow-2xl">
-          <img
-            src={project.coverImage}
+          <UniversalMedia
+            src={project.heroVideoUrl || project.coverImage}
             alt={project.title}
-            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#09090A]/80 via-transparent to-transparent opacity-60" />
@@ -227,7 +227,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
             </div>
 
             <Button variant="primary" icon="arrow-right">
-              Vedi progetto
+              {isEn ? 'View project' : 'Vedi progetto'}
             </Button>
           </div>
         )}

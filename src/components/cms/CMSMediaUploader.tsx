@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { EditorialImage, ImageCropPreference, ImageOrientation } from '../../types';
-import { Upload, Trash2, Copy, MoveUp, MoveDown, Focus, Eye, Sparkles } from 'lucide-react';
-import { detectImageOrientation } from '../../lib/cmsStorage';
+import { Upload, Trash2, Copy, MoveUp, MoveDown, Focus, Eye, Sparkles, Loader2, CheckCircle2 } from 'lucide-react';
+import { processAndUploadMedia } from '../../lib/uploadService';
 
 interface CMSMediaUploaderProps {
   images: EditorialImage[];
@@ -16,38 +16,47 @@ export const CMSMediaUploader: React.FC<CMSMediaUploaderProps> = ({
   title = 'Gestione Immagini & Media',
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
 
-  // Handle multi-file drop or selection
-  const handleFilesAdded = (files: FileList | null) => {
+  // Handle multi-file drop or selection with async upload service
+  const handleFilesAdded = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
     const fileList = Array.from(files);
-    
-    fileList.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const url = e.target?.result as string;
-        
-        // Auto detect image dimensions & orientation
-        const img = new Image();
-        img.onload = () => {
-          const orientation = detectImageOrientation(img.width, img.height);
-          const newImg: EditorialImage = {
-            id: `img-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-            url,
-            altText: file.name.replace(/\.[^/.]+$/, ''),
-            caption: '',
-            credit: 'Vincenzo Gulluscio',
-            cropPreference: 'auto',
-            orientation,
-            hotspot: { x: 50, y: 50 },
-          };
-          onChange([...images, newImg]);
+    setIsUploading(true);
+    setUploadProgress(`Elaborazione 0 di ${fileList.length} file...`);
+
+    const newUploadedImages: EditorialImage[] = [];
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      setUploadProgress(`Ottimizzazione e caricamento (${i + 1}/${fileList.length}): ${file.name}`);
+
+      try {
+        const result = await processAndUploadMedia(file);
+        const newImg: EditorialImage = {
+          id: `img-${Date.now()}-${i}-${Math.random().toString(36).substring(2, 6)}`,
+          url: result.url,
+          altText: file.name.replace(/\.[^/.]+$/, ''),
+          caption: '',
+          credit: 'Vincenzo Gulluscio',
+          cropPreference: 'auto',
+          orientation: result.orientation,
+          hotspot: { x: 50, y: 50 },
         };
-        img.src = url;
-      };
-      reader.readAsDataURL(file);
-    });
+        newUploadedImages.push(newImg);
+      } catch (err) {
+        console.error('Error uploading file:', file.name, err);
+      }
+    }
+
+    if (newUploadedImages.length > 0) {
+      onChange([...images, ...newUploadedImages]);
+    }
+
+    setIsUploading(false);
+    setUploadProgress(null);
   };
 
   const handleUpdateImage = (id: string, updated: Partial<EditorialImage>) => {
@@ -98,17 +107,25 @@ export const CMSMediaUploader: React.FC<CMSMediaUploaderProps> = ({
           className="px-3.5 py-1.5 rounded-xl bg-[#121214] border border-[#28282D] hover:border-[#FF5A36] text-[#FF5A36] font-mono text-xs font-medium inline-flex items-center gap-1.5 transition-all shadow"
         >
           <Upload className="w-3.5 h-3.5" />
-          <span>Carica Immagini</span>
+          <span>Carica Foto / Video</span>
         </button>
         <input
           ref={fileInputRef}
           type="file"
           multiple
-          accept="image/*"
+          accept="image/*,video/*"
           className="hidden"
           onChange={(e) => handleFilesAdded(e.target.files)}
         />
       </div>
+
+      {/* Uploading Status Overlay Bar */}
+      {isUploading && (
+        <div className="p-3 bg-[#FF5A36]/15 border border-[#FF5A36]/40 rounded-xl flex items-center gap-3 animate-pulse">
+          <Loader2 className="w-5 h-5 text-[#FF5A36] animate-spin shrink-0" />
+          <span className="text-xs font-mono text-white font-medium">{uploadProgress}</span>
+        </div>
+      )}
 
       {/* Drag and Drop Zone */}
       <div

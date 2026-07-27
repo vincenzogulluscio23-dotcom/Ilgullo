@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { MediaAsset, ImageOrientation } from '../../types';
-import { Search, Copy, Check, Trash2, Filter, Upload, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { Search, Copy, Check, Trash2, Filter, Upload, Image as ImageIcon, Sparkles, Loader2 } from 'lucide-react';
+import { processAndUploadMedia } from '../../lib/uploadService';
 
 export const CMSMediaLibrary: React.FC = () => {
   const { mediaAssets, addMediaAsset, deleteMediaAsset } = useCMS();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
   const categories = ['All', 'projects', 'frames', 'hero', 'lab'];
 
@@ -17,25 +20,31 @@ export const CMSMediaLibrary: React.FC = () => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    Array.from(files).forEach((file: File) => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const url = ev.target?.result as string;
-        const newAsset: MediaAsset = {
-          id: `media-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-          url,
+    const fileList = Array.from(files) as File[];
+    setIsUploading(true);
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      setUploadStatus(`Ottimizzazione e caricamento (${i + 1}/${fileList.length}): ${file.name}`);
+      try {
+        const res = await processAndUploadMedia(file);
+        addMediaAsset({
+          url: res.url,
           name: file.name,
           category: 'projects',
-          uploadedAt: new Date().toISOString().split('T')[0],
-        };
-        addMediaAsset(newAsset);
-      };
-      reader.readAsDataURL(file);
-    });
+          orientation: res.orientation,
+        });
+      } catch (err) {
+        console.error('Error uploading asset:', file?.name, err);
+      }
+    }
+
+    setIsUploading(false);
+    setUploadStatus(null);
   };
 
   const filtered = mediaAssets.filter((m) => {
@@ -62,10 +71,17 @@ export const CMSMediaLibrary: React.FC = () => {
 
         <label className="py-2.5 px-5 rounded-xl bg-[#FF5A36] hover:bg-[#E04826] text-white font-mono text-xs font-medium inline-flex items-center gap-2 cursor-pointer transition-all shadow-lg">
           <Upload className="w-4 h-4" />
-          <span>Carica Nuovi File</span>
-          <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
+          <span>Carica Foto / Video</span>
+          <input type="file" multiple accept="image/*,video/*" onChange={handleFileUpload} className="hidden" />
         </label>
       </div>
+
+      {isUploading && (
+        <div className="p-4 bg-[#FF5A36]/15 border border-[#FF5A36]/40 rounded-2xl flex items-center gap-3 animate-pulse">
+          <Loader2 className="w-5 h-5 text-[#FF5A36] animate-spin shrink-0" />
+          <span className="text-xs font-mono text-white font-medium">{uploadStatus}</span>
+        </div>
+      )}
 
       {/* Filter and Search */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">

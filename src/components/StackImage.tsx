@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { motionDuration, motionEase } from '../motion/motionConfig';
+import { UniversalMedia } from './UniversalMedia';
 
 export interface StackImageItem {
   src: string;
@@ -124,10 +125,9 @@ export const StackImage: React.FC<StackImageProps> = ({
                 isTop ? 'ring-1 ring-white/15' : ''
               }`}
             >
-              <img
+              <UniversalMedia
                 src={item.src}
                 alt={item.decorative ? '' : item.alt || 'Editorial visual'}
-                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
 

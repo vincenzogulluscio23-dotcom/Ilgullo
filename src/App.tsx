@@ -23,34 +23,26 @@ import { AboutView } from './components/AboutView';
 import { ContactView } from './components/ContactView';
 import { PrivacyView } from './components/PrivacyView';
 import { NotFoundView } from './components/NotFoundView';
-import { CMSMainView } from './components/cms/CMSMainView';
+
+const SanityStudioPage = React.lazy(() => import('./components/SanityStudio'));
 
 function MainAppContent() {
   const [currentRoute, setCurrentRoute] = useState<RoutePath>('home');
   const [activeProjectSlug, setActiveProjectSlug] = useState<string | null>(null);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
-  const { projects, frames, articles } = useCMS();
+  const { projects, frames, articles, siteContent } = useCMS();
   const { language } = useLanguage();
 
-  // Check URL path, query parameters, or hash on load for external CMS link access (/superman)
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  // Check URL path on load or popstate for Sanity Studio access (/superman)
   React.useEffect(() => {
     const checkCMSAccess = () => {
       const pathname = window.location.pathname.toLowerCase();
-      const params = new URLSearchParams(window.location.search);
-      const hash = window.location.hash.toLowerCase();
-
-      if (
-        pathname.includes('superman') ||
-        params.get('superman') !== null ||
-        params.get('cms') === 'true' ||
-        params.get('cms') === '1' ||
-        params.get('admin') === 'true' ||
-        params.get('admin') === '1' ||
-        params.get('admin') === 'gullo' ||
-        hash === '#superman' ||
-        hash === '#cms' ||
-        hash === '#admin'
-      ) {
+      if (pathname.startsWith('/superman')) {
         setCurrentRoute('cms');
       }
     };
@@ -60,7 +52,6 @@ function MainAppContent() {
     return () => window.removeEventListener('popstate', checkCMSAccess);
   }, []);
 
-  // Handle browser back/forward and hash or direct state transitions
   const handleNavigate = (route: RoutePath) => {
     setCurrentRoute(route);
     if (route !== 'project-detail') {
@@ -68,10 +59,10 @@ function MainAppContent() {
     }
 
     if (route === 'cms') {
-      if (!window.location.pathname.toLowerCase().includes('superman')) {
+      if (!window.location.pathname.toLowerCase().startsWith('/superman')) {
         window.history.pushState({}, '', '/superman');
       }
-    } else if (window.location.pathname.toLowerCase().includes('superman')) {
+    } else if (window.location.pathname.toLowerCase().startsWith('/superman')) {
       window.history.pushState({}, '', '/');
     }
 
@@ -86,14 +77,29 @@ function MainAppContent() {
 
   const activeProject = projects.find((p) => p.slug === activeProjectSlug) || projects[0];
 
-  // Dedicated full-screen route for the CMS Admin Panel
+  // Dedicated route for Sanity Studio at /superman
   if (currentRoute === 'cms') {
-    return <CMSMainView onNavigate={handleNavigate} />;
+    return (
+      <React.Suspense
+        fallback={
+          <div className="min-h-screen bg-[#09090A] flex flex-col items-center justify-center p-6 text-white font-mono text-xs">
+            <div className="w-8 h-8 border-2 border-[#FF5A36] border-t-transparent rounded-full animate-spin mb-4" />
+            <span>Caricamento Sanity Studio (/superman)...</span>
+          </div>
+        }
+      >
+        <SanityStudioPage />
+      </React.Suspense>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-[#09090A] text-[#F1F0EB] font-sans selection:bg-[#FF5A36] selection:text-white flex flex-col relative grain-overlay">
-      
+    <div
+      data-theme={theme}
+      className={`min-h-screen font-sans selection:bg-[#FF5A36] selection:text-white flex flex-col relative grain-overlay transition-colors duration-500 ${
+        theme === 'light' ? 'bg-[#F8F8F6] text-[#18181B]' : 'bg-[#09090A] text-[#F1F0EB]'
+      }`}
+    >
       {/* Custom Pointer Cursor for Desktop */}
       <CustomCursor />
 
@@ -101,6 +107,8 @@ function MainAppContent() {
       <Header
         currentRoute={currentRoute}
         onNavigate={handleNavigate}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main View Router wrapped in Framer Motion Page & Language Transitions */}
@@ -116,13 +124,13 @@ function MainAppContent() {
                   onSelectProject={handleSelectProject}
                   onNavigate={handleNavigate}
                 />
-                <BeyondProcessSection />
                 <WhatMattersSection />
                 <FramesSection
                   frames={frames}
                   onNavigate={handleNavigate}
                   isTeaser
                 />
+                <BeyondProcessSection />
                 <LabSection
                   articles={articles}
                   onNavigate={handleNavigate}
@@ -191,11 +199,9 @@ function MainAppContent() {
 
       {/* Global Shell Footer */}
       <Footer onNavigate={handleNavigate} />
-
     </div>
   );
 }
-
 
 export function App() {
   return (

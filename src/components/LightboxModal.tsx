@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { FrameItem } from '../types';
 import { X, ChevronLeft, ChevronRight, MapPin, Calendar } from 'lucide-react';
+import { UniversalMedia } from './UniversalMedia';
 
 interface LightboxModalProps {
   frames: FrameItem[];
@@ -67,10 +68,9 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
           <ChevronLeft className="w-6 h-6" />
         </button>
 
-        <img
+        <UniversalMedia
           src={currentFrame.image}
           alt={currentFrame.title || 'Gullo Frame'}
-          referrerPolicy="no-referrer"
           className="max-h-[75vh] max-w-[90vw] object-contain rounded-lg shadow-2xl transition-all duration-300"
         />
 

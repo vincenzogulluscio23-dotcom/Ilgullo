@@ -32,10 +32,10 @@ export const LabSection: React.FC<LabSectionProps> = ({
     ? localizedArticles
     : localizedArticles.filter(a => a.category === selectedCategory);
 
-  const displayArticles = isTeaser ? localizedArticles.slice(0, 3) : filteredArticles;
+  const displayArticles = isTeaser ? (localizedArticles.length > 0 ? [localizedArticles[0]] : []) : filteredArticles;
 
   return (
-    <section className="py-24 md:py-36 px-4 sm:px-6 lg:px-12 bg-[#09090A] relative overflow-hidden">
+    <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-12 bg-[#09090A] relative overflow-hidden">
       
       {/* Background Soft Glow */}
       <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-[#FF5A36]/5 rounded-full blur-[160px] pointer-events-none -translate-y-1/2" />
@@ -43,7 +43,7 @@ export const LabSection: React.FC<LabSectionProps> = ({
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
             <SectionLabel number={isTeaser ? '06' : undefined} label="Lab — Notes & Process" className="mb-4" />
             <h2 className="font-serif italic text-3xl sm:text-5xl text-[#F1F0EB] text-balance">
@@ -86,50 +86,110 @@ export const LabSection: React.FC<LabSectionProps> = ({
           </div>
         )}
 
-        {/* Free Borderless Article Stream */}
-        <div className="space-y-4">
-          {displayArticles.map((article) => (
-            <div
-              key={article.id}
-              data-cursor="READ"
-              onClick={() => setSelectedArticle(article)}
-              className="group cursor-pointer border-b border-[#28282D]/40 py-6 sm:py-8 transition-all duration-300 hover:border-[#FF5A36] hover:pl-2"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                
-                <div className="lg:col-span-8">
-                  <div className="flex items-center gap-3 font-mono text-xs text-[#8D8D89] mb-3">
-                    <span className="text-[#FF5A36]">{article.number}</span>
-                    <span>•</span>
-                    <span className="uppercase tracking-wider">{article.category}</span>
-                    <span>•</span>
-                    <span>{article.date}</span>
-                  </div>
+        {/* Teaser Mode: Single Latest Article Card with Cover Image */}
+        {isTeaser && displayArticles.length > 0 ? (
+          <div
+            data-cursor="READ"
+            onClick={() => setSelectedArticle(displayArticles[0])}
+            className="group cursor-pointer bg-[#121214] border border-[#28282D] rounded-2xl md:rounded-3xl p-6 sm:p-8 hover:border-[#FF5A36] transition-all duration-500 shadow-xl overflow-hidden"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-5 aspect-[16/10] sm:aspect-[16/9] rounded-xl overflow-hidden bg-[#09090A]">
+                <img
+                  src={displayArticles[0].coverImage}
+                  alt={displayArticles[0].title}
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
 
-                  <h3 className="font-serif italic text-2xl sm:text-3xl text-[#F1F0EB] group-hover:text-white transition-colors duration-300 mb-3 leading-snug">
-                    {article.title}
-                  </h3>
-
-                  <p className="text-xs sm:text-sm text-[#C9C7C1] font-sans leading-relaxed text-pretty line-clamp-2">
-                    {article.excerpt}
-                  </p>
+              <div className="lg:col-span-7 space-y-4">
+                <div className="flex items-center gap-3 font-mono text-xs text-[#8D8D89]">
+                  <span className="text-[#FF5A36] font-medium">{displayArticles[0].number}</span>
+                  <span>•</span>
+                  <span className="uppercase tracking-wider">{displayArticles[0].category}</span>
+                  <span>•</span>
+                  <span>{displayArticles[0].date}</span>
                 </div>
 
-                <div className="lg:col-span-4 flex items-center justify-between lg:justify-end gap-4 pt-4 lg:pt-0">
-                  <span className="font-mono text-xs text-[#8D8D89] flex items-center gap-1">
+                <h3 className="font-serif italic text-2xl sm:text-4xl text-[#F1F0EB] group-hover:text-white transition-colors leading-tight">
+                  {displayArticles[0].title}
+                </h3>
+
+                <p className="text-sm sm:text-base text-[#C9C7C1] font-sans leading-relaxed line-clamp-3">
+                  {displayArticles[0].excerpt}
+                </p>
+
+                <div className="pt-2 flex items-center justify-between font-mono text-xs text-[#8D8D89]">
+                  <span className="flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5" />
-                    {article.readingTime}
+                    {displayArticles[0].readingTime}
                   </span>
-
-                  <div className="w-10 h-10 rounded-full border border-[#28282D] group-hover:border-[#FF5A36] group-hover:bg-[#FF5A36] group-hover:text-white flex items-center justify-center transition-all duration-300">
+                  <span className="text-[#FF5A36] group-hover:underline flex items-center gap-1 font-medium">
+                    {isEn ? 'Read article' : 'Leggi articolo'}
                     <ArrowUpRight className="w-4 h-4" />
-                  </div>
+                  </span>
                 </div>
-
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          /* Full Lab Stream with Cover Images & Rich Layout */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayArticles.map((article) => (
+              <div
+                key={article.id}
+                data-cursor="READ"
+                onClick={() => setSelectedArticle(article)}
+                className="group cursor-pointer bg-[#121214] border border-[#28282D] rounded-2xl overflow-hidden hover:border-[#FF5A36] transition-all duration-300 flex flex-col justify-between shadow-lg"
+              >
+                <div className="aspect-[16/10] overflow-hidden bg-[#09090A] relative">
+                  <img
+                    src={article.coverImage}
+                    alt={article.title}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  <div className="absolute top-3 left-3 bg-[#09090A]/80 backdrop-blur-md px-3 py-1 rounded-full font-mono text-[10px] uppercase text-white/90 border border-white/10">
+                    {article.category}
+                  </div>
+                </div>
+
+                <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
+                  <div>
+                    <div className="flex items-center gap-2 font-mono text-xs text-[#8D8D89] mb-2">
+                      <span className="text-[#FF5A36]">{article.number}</span>
+                      <span>•</span>
+                      <span>{article.date}</span>
+                    </div>
+
+                    <h3 className="font-serif italic text-2xl text-[#F1F0EB] group-hover:text-white transition-colors mb-2 leading-snug">
+                      {article.title}
+                    </h3>
+
+                    <p className="text-xs sm:text-sm text-[#C9C7C1] font-sans leading-relaxed line-clamp-3">
+                      {article.excerpt}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-[#28282D]/60 flex items-center justify-between font-mono text-xs text-[#8D8D89]">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      {article.readingTime}
+                    </span>
+                    <div className="w-8 h-8 rounded-full border border-[#28282D] group-hover:border-[#FF5A36] group-hover:bg-[#FF5A36] group-hover:text-white flex items-center justify-center transition-all">
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
       </div>
 

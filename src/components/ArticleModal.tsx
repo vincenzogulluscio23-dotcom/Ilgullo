@@ -79,25 +79,72 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ article, onClose }) 
               </p>
             </div>
 
-            {/* Cover Image */}
-            <div className="aspect-[16/9] rounded-xl overflow-hidden mb-12 bg-[#09090A] border border-[#28282D]/80">
-              <img
-                src={article.coverImage}
-                alt={article.title}
-                loading="lazy"
-                decoding="async"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-              />
-            </div>
+            {/* Media Hero: Video (if present) or Cover Image */}
+            {article.heroVideoUrl ? (
+              <div className="aspect-video rounded-2xl overflow-hidden mb-12 bg-[#09090A] border border-[#28282D] shadow-2xl relative">
+                <iframe
+                  src={`${article.heroVideoUrl}?autoplay=0&title=0&byline=0&portrait=0`}
+                  title={article.title}
+                  className="w-full h-full border-0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ) : (
+              <div className="aspect-[16/9] rounded-2xl overflow-hidden mb-12 bg-[#09090A] border border-[#28282D] shadow-2xl">
+                <img
+                  src={article.coverImage}
+                  alt={article.title}
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
 
-            {/* Article Body */}
-            <div className="prose prose-invert max-w-none text-sm sm:text-base text-[#C9C7C1] leading-relaxed space-y-6 font-sans">
-              {article.content.map((paragraph, idx) => (
-                <p key={idx} className="leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
+            {/* Asymmetric Editorial Article Content */}
+            <div className="space-y-12">
+              {article.content.map((paragraph, idx) => {
+                // Interleave image galleries and asymmetric frame callouts
+                const extraImage = article.images && article.images[idx];
+                const isQuoteParagraph = paragraph.startsWith('"') || paragraph.length < 90;
+
+                return (
+                  <React.Fragment key={idx}>
+                    {isQuoteParagraph ? (
+                      <blockquote className="my-8 py-6 px-8 rounded-2xl bg-[#09090A] border-l-4 border-[#FF5A36] font-serif italic text-xl sm:text-2xl text-[#F1F0EB] leading-relaxed shadow-inner">
+                        {paragraph}
+                      </blockquote>
+                    ) : (
+                      <p className="text-base sm:text-lg text-[#C9C7C1] font-sans leading-relaxed text-pretty">
+                        {paragraph}
+                      </p>
+                    )}
+
+                    {/* Asymmetric Image Insertion */}
+                    {extraImage && (
+                      <div className={`my-8 grid grid-cols-1 ${idx % 2 === 0 ? 'md:grid-cols-12' : 'md:grid-cols-10'} gap-6 items-center`}>
+                        <div className={`aspect-[4/3] rounded-2xl overflow-hidden bg-[#09090A] border border-[#28282D] ${idx % 2 === 0 ? 'md:col-span-8' : 'md:col-span-7 md:col-start-2'} shadow-xl`}>
+                          <img
+                            src={extraImage}
+                            alt={`Frame ${idx + 1}`}
+                            loading="lazy"
+                            decoding="async"
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                          />
+                        </div>
+                        <div className="md:col-span-4 font-mono text-xs text-[#8D8D89] space-y-1">
+                          <span className="text-[#FF5A36] font-medium block">FIG. 0{idx + 1}</span>
+                          <span className="block text-white font-sans text-sm">Frammento di produzione</span>
+                          <span className="block text-[11px] text-[#8D8D89]">Archivio Lab · Gullu Vision</span>
+                        </div>
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </div>
 
             {/* Footer */}
